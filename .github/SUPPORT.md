@@ -50,4 +50,4 @@ A: กรุณาใช้ [GitHub Issues](https://github.com/bemindtech/bmt-op
 - [GitHub](https://github.com/bemindtech)
 - [Twitter](https://twitter.com/bemindtech)
 - [Facebook](https://facebook.com/bemindtech)
-- [LinkedIn](https://linkedin.com/company/bemindtech) 
+- [LinkedIn](https://linkedin.com/company/bemindtech)

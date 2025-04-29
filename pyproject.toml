@@ -27,6 +27,7 @@ dependencies = [
     "numpy>=1.24.0",
     "rich>=13.0.0",
     "click>=8.0.0",
+    "pyautogen>=0.2.0",
 ]
 
 [project.scripts]
@@ -54,4 +55,20 @@ include = '\.pyi?$'
 
 [tool.isort]
 profile = "black"
-multi_line_output = 3 
+multi_line_output = 3
+
+[tool.bandit]
+exclude_dirs = ["tests", "docs"]
+targets = ["src", "scripts"]
+skips = [
+    "B101",  # Skip assert statements
+    "B404",  # Skip subprocess import warning
+    "B603",  # Skip subprocess call warning
+    "B607",  # Skip subprocess partial path warning
+    "B110",  # Skip try-except-pass warning
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-v --tb=short"

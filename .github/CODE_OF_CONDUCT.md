@@ -43,4 +43,4 @@
 
 หลักจรรยาบรรณนี้ดัดแปลงจาก [Contributor Covenant][homepage] เวอร์ชัน 2.1 ซึ่งมีอยู่ที่ https://www.contributor-covenant.org/version/2/1/code_of_conduct.html
 
-[homepage]: https://www.contributor-covenant.org 
+[homepage]: https://www.contributor-covenant.org

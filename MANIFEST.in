@@ -9,4 +9,4 @@ recursive-include src/bmt_open_python_scripts *.json
 recursive-include src/bmt_open_python_scripts *.yaml
 recursive-include src/bmt_open_python_scripts *.yml
 recursive-include src/bmt_open_python_scripts *.txt
-recursive-include src/bmt_open_python_scripts *.md 
+recursive-include src/bmt_open_python_scripts *.md

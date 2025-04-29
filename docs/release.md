@@ -104,3 +104,234 @@ version="1.0.0"
 - [Semantic Versioning](https://semver.org/)
 - [GitHub Releases](https://docs.github.com/en/repositories/releasing-projects-on-github)
 - [PyPI Publishing](https://packaging.python.org/tutorials/publishing-packages/)
+
+# การ Release (Release)
+
+เอกสารนี้อธิบายขั้นตอนการ release โปรเจค BMT Open Python Scripts
+
+## การเตรียมความพร้อม
+
+ก่อนที่จะทำการ release ต้องตรวจสอบว่าได้เตรียมความพร้อมดังนี้:
+
+1. ตรวจสอบการตั้งค่า Configuration:
+   ```python
+   from scripts.config import validate_config
+   
+   # ตรวจสอบการตั้งค่า
+   if not validate_config():
+       print("กรุณาตั้งค่า environment variables ให้ครบถ้วน")
+       exit(1)
+   ```
+
+2. ตรวจสอบ Dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. รันเทสต์ทั้งหมด:
+   ```bash
+   python -m pytest
+   ```
+
+## ขั้นตอนการ Release
+
+### 1. อัปเดตเวอร์ชัน
+
+อัปเดตเวอร์ชันในไฟล์ `pyproject.toml`:
+
+```toml
+[tool.poetry]
+name = "bmt-open-python-scripts"
+version = "0.1.0"  # อัปเดตเวอร์ชันตามความเหมาะสม
+```
+
+### 2. อัปเดต Changelog
+
+เพิ่มรายละเอียดการเปลี่ยนแปลงในไฟล์ `CHANGELOG.md`:
+
+```markdown
+# Changelog
+
+## [0.1.0] - 2024-03-21
+
+### Added
+- เพิ่มการตั้งค่า Configuration สำหรับสคริปต์ต่างๆ
+- เพิ่มการทดสอบ Configuration
+- เพิ่มการทดสอบ Webcam
+- เพิ่มการทดสอบ Git
+- เพิ่มการทดสอบ AutoGen
+
+### Changed
+- ปรับปรุงการตั้งค่า environment variables
+- ปรับปรุงการทดสอบ
+
+### Fixed
+- แก้ไขการตรวจสอบ environment variables
+```
+
+### 3. สร้าง Release Branch
+
+```bash
+git checkout -b release/v0.1.0
+```
+
+### 4. Commit การเปลี่ยนแปลง
+
+```bash
+git add .
+git commit -m "Release v0.1.0"
+```
+
+### 5. สร้าง Tag
+
+```bash
+git tag -a v0.1.0 -m "Release v0.1.0"
+```
+
+### 6. Push ไปยัง Remote
+
+```bash
+git push origin release/v0.1.0
+git push origin v0.1.0
+```
+
+### 7. สร้าง Release บน GitHub
+
+1. ไปที่หน้า Releases บน GitHub
+2. คลิก "Create a new release"
+3. เลือก tag ที่สร้างไว้
+4. กรอกรายละเอียดการ release
+5. คลิก "Publish release"
+
+### 8. อัปโหลดไปยัง PyPI
+
+```bash
+# สร้าง distribution
+python -m build
+
+# อัปโหลดไปยัง PyPI
+python -m twine upload dist/*
+```
+
+## การตั้งค่า GitHub Actions
+
+### 1. Release Workflow
+
+สร้างไฟล์ `.github/workflows/release.yml`:
+
+```yaml
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install build twine
+      
+      - name: Validate configuration
+        run: |
+          python -c "from scripts.config import validate_config; assert validate_config()"
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      
+      - name: Run tests
+        run: |
+          pip install pytest
+          python -m pytest
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      
+      - name: Build package
+        run: python -m build
+      
+      - name: Upload to PyPI
+        run: |
+          python -m twine upload dist/*
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+```
+
+### 2. การตั้งค่า Secrets
+
+1. ไปที่หน้า Settings > Secrets and variables > Actions
+2. คลิก "New repository secret"
+3. เพิ่ม secrets ดังนี้:
+   - `OPENAI_API_KEY`: API key สำหรับ OpenAI
+   - `PYPI_API_TOKEN`: API token สำหรับ PyPI
+
+## การตรวจสอบหลัง Release
+
+### 1. ตรวจสอบ PyPI
+
+ตรวจสอบว่าสามารถติดตั้งแพ็คเกจได้:
+
+```bash
+pip install bmt-open-python-scripts==0.1.0
+```
+
+### 2. ตรวจสอบการทำงาน
+
+ทดสอบการทำงานของแพ็คเกจ:
+
+```python
+from bmt_open_python_scripts.scripts.config import get_config, validate_config
+
+# ตรวจสอบการตั้งค่า
+config = get_config()
+assert validate_config()
+
+# ทดสอบการใช้งาน
+print(config["webcam"])
+print(config["git"])
+print(config["autogen"])
+```
+
+### 3. ตรวจสอบ Documentation
+
+ตรวจสอบว่าเอกสารอัปเดตครบถ้วน:
+- README.md
+- CHANGELOG.md
+- docs/
+  - autogen.md
+  - testing.md
+  - release.md
+
+## การแก้ไขปัญหา
+
+### 1. กรณี Release ล้มเหลว
+
+1. ตรวจสอบ error messages ใน GitHub Actions
+2. แก้ไขปัญหาและ commit การเปลี่ยนแปลง
+3. สร้าง tag ใหม่และ push
+4. รัน workflow ใหม่
+
+### 2. กรณีแพ็คเกจมีปัญหา
+
+1. สร้าง hotfix branch
+2. แก้ไขปัญหาและ commit การเปลี่ยนแปลง
+3. สร้าง tag ใหม่และ push
+4. รัน workflow ใหม่
+
+## หมายเหตุ
+
+- ตรวจสอบการตั้งค่า Configuration ก่อนทำการ release
+- รันเทสต์ทั้งหมดก่อนทำการ release
+- อัปเดตเอกสารให้ครบถ้วน
+- ตรวจสอบการทำงานหลัง release
+- เตรียมแผนการแก้ไขปัญหา

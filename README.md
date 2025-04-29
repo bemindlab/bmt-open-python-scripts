@@ -8,6 +8,10 @@ BMT Open Python Scripts เป็นชุดสคริปต์ Python ที
   - `show.py`: แสดงภาพจากกล้องเว็บแคมแบบเรียลไทม์
 - **Git**: สคริปต์สำหรับการทำงานกับ Git
   - `commit-summary.py`: สร้างสรุปการ commit โดยใช้ AI
+- **Agents**: สคริปต์สำหรับการใช้งาน AI Agents
+  - `autogen_example.py`: ตัวอย่างการใช้งาน AutoGen
+  - `autogen_group_chat.py`: ตัวอย่างการใช้งาน AutoGen Group Chat
+  - `autogen_file_operations.py`: ตัวอย่างการใช้งาน AutoGen ในการทำงานกับไฟล์และข้อมูล
 
 ## 🛠️ การติดตั้ง
 
@@ -50,6 +54,9 @@ bmtlab run -s หมวดหมู่.ชื่อสคริปต์
 # ตัวอย่าง: รันสคริปต์แสดงภาพจากเว็บแคม
 bmtlab run -s webcam.show
 
+# ตัวอย่าง: รันสคริปต์ตัวอย่างการใช้งาน AutoGen
+bmtlab run -s agents.autogen_example
+
 # แสดงเวอร์ชันของแพ็คเกจ
 bmtlab version
 ```
@@ -65,6 +72,7 @@ python main.py [คำสั่ง] [ตัวเลือก]
 # ตัวอย่าง:
 python main.py list  # แสดงรายการสคริปต์
 python main.py run -s webcam.show  # รันสคริปต์แสดงภาพจากเว็บแคม
+python main.py run -s agents.autogen_example  # รันสคริปต์ตัวอย่างการใช้งาน AutoGen
 python main.py version  # แสดงเวอร์ชันของแพ็คเกจ
 ```
 
@@ -76,6 +84,22 @@ bmt-open-python-scripts/
 │       ├── __init__.py
 │       ├── _version.py
 │       └── main.py
+├── lib/
+│   └── agents/
+│       ├── __init__.py
+│       ├── autogen.py
+│       ├── camera.py
+│       └── README.md
+├── scripts/
+│   ├── agents/
+│   │   ├── autogen_example.py
+│   │   ├── autogen_group_chat.py
+│   │   ├── autogen_file_operations.py
+│   │   └── mockup.py
+│   ├── git/
+│   └── webcam/
+├── docs/
+│   └── autogen.md
 ├── tests/
 ├── requirements.txt
 ├── setup.py
@@ -88,6 +112,11 @@ bmt-open-python-scripts/
 - แสดงรายละเอียดของสคริปต์ก่อนรัน
 - รองรับการรันสคริปต์ Python, Shell และ Batch
 - แสดงผลด้วยสีสันสวยงาม
+- **AutoGen Core Feature Library**: ชุดเครื่องมือสำหรับการสร้างและใช้งาน AI Agents
+  - CodeAgent: สำหรับการเขียนและแก้ไขโค้ด
+  - ResearchAgent: สำหรับการค้นคว้าและวิเคราะห์ข้อมูล
+  - CreativeAgent: สำหรับการสร้างสรรค์เนื้อหา
+  - Group Chat: สำหรับการทำงานร่วมกันระหว่าง Agents
 
 ## 📝 การทดสอบ
 รันการทดสอบด้วยคำสั่ง:

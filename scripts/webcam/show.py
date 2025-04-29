@@ -1,90 +1,69 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 """
-สคริปต์สำหรับแสดงวิดีโอสตรีมจากเว็บแคม
+สคริปต์สำหรับแสดงภาพจากกล้อง
 """
 
-import argparse
 import cv2
 import sys
-import datetime
-import os
-from pathlib import Path
+from scripts.config import WEBCAM_CONFIG
 
-
-def show_webcam(camera_index=0):
+def show_camera(camera_id: int = 0):
     """
-    แสดงวิดีโอสตรีมจากเว็บแคม
+    แสดงภาพจากกล้องที่ระบุ
     
     Args:
-        camera_index (int): ดัชนีของกล้องเว็บแคม (ค่าเริ่มต้นคือ 0)
+        camera_id (int): ID ของกล้องที่ต้องการแสดงภาพ
     """
-    # เปิดการเชื่อมต่อกับกล้องเว็บแคม
-    cap = cv2.VideoCapture(camera_index)
-    
-    # ตรวจสอบว่าสามารถเปิดกล้องได้หรือไม่
+    # เปิดกล้อง
+    cap = cv2.VideoCapture(camera_id)
     if not cap.isOpened():
-        print(f"ไม่สามารถเปิดกล้องเว็บแคมที่ดัชนี {camera_index} ได้")
+        print(f"ไม่สามารถเปิดกล้อง ID {camera_id} ได้")
         return
     
-    print(f"กำลังแสดงวิดีโอสตรีมจากกล้องเว็บแคมที่ดัชนี {camera_index}")
-    print("กด 'q' เพื่อออกจากโปรแกรม")
-    print("กด 'c' เพื่อบันทึกภาพ")
+    # ตั้งค่ากล้องตาม configuration
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, WEBCAM_CONFIG["frame_width"])
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, WEBCAM_CONFIG["frame_height"])
+    cap.set(cv2.CAP_PROP_FPS, WEBCAM_CONFIG["fps"])
     
-    # สร้างโฟลเดอร์สำหรับเก็บภาพถ่าย
-    save_dir = os.path.expanduser("~/Pictures/webcam")
-    Path(save_dir).mkdir(parents=True, exist_ok=True)
+    print(f"กำลังแสดงภาพจากกล้อง ID {camera_id}")
+    print("กด 'q' เพื่อออก")
     
     try:
         while True:
-            # อ่านเฟรมจากกล้อง
+            # อ่านภาพจากกล้อง
             ret, frame = cap.read()
-            
-            # ตรวจสอบว่าอ่านเฟรมได้หรือไม่
             if not ret:
-                print("ไม่สามารถอ่านเฟรมจากกล้องได้")
+                print("ไม่สามารถอ่านภาพจากกล้องได้")
                 break
             
-            # แสดงเฟรม
-            cv2.imshow('Webcam', frame)
+            # แสดงภาพ
+            cv2.imshow("Camera", frame)
             
-            # รอการกดปุ่ม (1 มิลลิวินาที)
+            # รอการกดปุ่ม
             key = cv2.waitKey(1) & 0xFF
-            
-            # ถ้ากด 'q' ให้ออกจากลูป
             if key == ord('q'):
                 break
-            
-            # ถ้ากด 'c' ให้บันทึกเฟรมเป็นภาพ ไปที่โฟลเดอร์ ~/Pictures/webcam/{timestamp}.jpg
-            if key == ord('c'):
-                timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-                save_path = os.path.join(save_dir, f"{timestamp}.jpg")
-                cv2.imwrite(save_path, frame)
-                print(f"ภาพถ่ายถูกบันทึกเป็น '{save_path}'")
     
     finally:
-        # คืนทรัพยากร
+        # ปิดกล้องและหน้าต่าง
         cap.release()
         cv2.destroyAllWindows()
 
-
 def main():
-    """ฟังก์ชันหลัก"""
-    parser = argparse.ArgumentParser(description='แสดงวิดีโอสตรีมจากเว็บแคม')
-    parser.add_argument('--index', type=int, default=0, help='ดัชนีของกล้องเว็บแคม (ค่าเริ่มต้นคือ 0)')
+    """
+    ฟังก์ชันหลักสำหรับแสดงภาพจากกล้อง
+    """
+    # รับ ID ของกล้องจาก command line argument
+    camera_id = 0
+    if len(sys.argv) > 1:
+        try:
+            camera_id = int(sys.argv[1])
+        except ValueError:
+            print("ID ของกล้องต้องเป็นตัวเลข")
+            return
     
-    args = parser.parse_args()
-    
-    try:
-        show_webcam(args.index)
-    except KeyboardInterrupt:
-        print("\nโปรแกรมถูกยกเลิกโดยผู้ใช้")
-        sys.exit(0)
-    except Exception as e:
-        print(f"เกิดข้อผิดพลาด: {e}")
-        sys.exit(1)
-
+    show_camera(camera_id)
 
 if __name__ == "__main__":
     main()

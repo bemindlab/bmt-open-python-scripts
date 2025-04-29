@@ -24,4 +24,4 @@ build>=0.7.0
 # Development tools
 pre-commit>=3.3.3
 rich>=13.0.0
-click>=8.0.0 
+click>=8.0.0

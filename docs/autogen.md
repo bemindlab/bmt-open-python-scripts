@@ -1,0 +1,543 @@
+# AutoGen Core Feature Library
+
+โมดูลนี้เป็น core feature library สำหรับ agent script โดยใช้ AutoGen จาก Microsoft ซึ่งเป็นเครื่องมือที่ช่วยให้สามารถสร้างและใช้งาน AI agents ได้อย่างมีประสิทธิภาพ
+
+## สารบัญ
+
+- [การติดตั้ง](#การติดตั้ง)
+- [การใช้งานพื้นฐาน](#การใช้งานพื้นฐาน)
+- [ประเภทของ Agents](#ประเภทของ-agents)
+- [การทำงานร่วมกันระหว่าง Agents](#การทำงานร่วมกันระหว่าง-agents)
+- [การทำงานกับไฟล์และข้อมูล](#การทำงานกับไฟล์และข้อมูล)
+- [การตั้งค่า Configuration](#การตั้งค่า-configuration)
+- [ตัวอย่างการใช้งาน](#ตัวอย่างการใช้งาน)
+- [ข้อจำกัดและข้อควรระวัง](#ข้อจำกัดและข้อควรระวัง)
+
+## การติดตั้ง
+
+### 1. ติดตั้ง AutoGen ผ่าน pip
+
+```bash
+pip install pyautogen
+```
+
+### 2. ตั้งค่า API key สำหรับ OpenAI
+
+```bash
+export OPENAI_API_KEY=your-api-key
+```
+
+หรือสร้างไฟล์ `.env` ในโฟลเดอร์หลักของโปรเจค:
+
+```
+OPENAI_API_KEY=your-api-key
+```
+
+## การใช้งานพื้นฐาน
+
+### AutoGenAgent
+
+คลาสหลักสำหรับการใช้งาน AutoGen ซึ่งเป็นพื้นฐานสำหรับ agents อื่นๆ ทั้งหมด
+
+```python
+from lib.agents.autogen import AutoGenAgent
+
+# สร้าง agent
+agent = AutoGenAgent(
+    name="my_agent",
+    system_message="คุณเป็นผู้ช่วยที่ช่วยตอบคำถาม",
+    api_key="your-api-key"  # ถ้าไม่ระบุจะใช้จากตัวแปรสภาพแวดล้อม OPENAI_API_KEY
+)
+
+# ส่งข้อความไปยัง agent
+response = agent.chat("สวัสดี")
+
+# รันโค้ดผ่าน agent
+result = agent.execute_code("print('Hello, World!')")
+
+# สร้าง group chat
+group_chat = agent.create_group_chat(
+    agents=[other_agent.agent],
+    group_name="my_group_chat"
+)
+
+# รัน group chat
+result = agent.run_group_chat(group_chat, "หัวข้อสำหรับ group chat")
+```
+
+## ประเภทของ Agents
+
+### CodeAgent
+
+Agent สำหรับการเขียนและแก้ไขโค้ด
+
+```python
+from lib.agents.autogen import CodeAgent
+
+# สร้าง code agent
+code_agent = CodeAgent(api_key="your-api-key")
+
+# เขียนโค้ดตามคำอธิบาย
+code = code_agent.write_code("เขียนฟังก์ชัน Python สำหรับคำนวณค่าเฉลี่ยของรายการตัวเลข")
+
+# แก้ไขบั๊กในโค้ด
+fixed_code = code_agent.fix_bug(
+    code="def add(a, b): return a - b",  # โค้ดที่มีบั๊ก
+    error_message="ฟังก์ชัน add ควรบวกเลข而不是ลบเลข"  # ข้อความแสดงข้อผิดพลาด
+)
+
+# ปรับปรุงโค้ดให้มีประสิทธิภาพและอ่านง่ายขึ้น
+refactored_code = code_agent.refactor_code(
+    code="""
+    def process_data(data):
+        result = []
+        for item in data:
+            if item > 0:
+                result.append(item * 2)
+        return result
+    """
+)
+```
+
+### ResearchAgent
+
+Agent สำหรับการค้นคว้าและวิเคราะห์ข้อมูล
+
+```python
+from lib.agents.autogen import ResearchAgent
+
+# สร้าง research agent
+research_agent = ResearchAgent(api_key="your-api-key")
+
+# ค้นคว้าข้อมูลเกี่ยวกับหัวข้อที่กำหนด
+research_result = research_agent.research("ประโยชน์ของ Python ในการพัฒนาเว็บแอปพลิเคชัน")
+
+# วิเคราะห์ข้อมูล
+analysis_result = research_agent.analyze_data("ข้อมูลที่ต้องการวิเคราะห์")
+```
+
+### CreativeAgent
+
+Agent สำหรับการสร้างเนื้อหาเชิงสร้างสรรค์
+
+```python
+from lib.agents.autogen import CreativeAgent
+
+# สร้าง creative agent
+creative_agent = CreativeAgent(api_key="your-api-key")
+
+# เขียนบทความ
+article = creative_agent.write_article(
+    topic="อนาคตของปัญญาประดิษฐ์ในประเทศไทย",
+    length="medium"  # short, medium, long
+)
+
+# สร้างไอเดีย
+ideas = creative_agent.generate_ideas("แอปพลิเคชันสำหรับการจัดการงาน")
+```
+
+## การทำงานร่วมกันระหว่าง Agents
+
+### Group Chat
+
+```python
+from lib.agents.autogen import CodeAgent, ResearchAgent, CreativeAgent
+
+# สร้าง agents
+code_agent = CodeAgent(api_key="your-api-key")
+research_agent = ResearchAgent(api_key="your-api-key")
+creative_agent = CreativeAgent(api_key="your-api-key")
+
+# สร้าง group chat
+group_chat = code_agent.create_group_chat(
+    agents=[research_agent.agent, creative_agent.agent],
+    group_name="project_planning"
+)
+
+# กำหนดหัวข้อสำหรับ group chat
+topic = """
+เราต้องการพัฒนาแอปพลิเคชัน Python สำหรับการจัดการงาน (Task Management)
+กรุณาช่วยวางแผนการพัฒนาแอปพลิเคชันนี้ โดยพิจารณาถึง:
+1. คุณสมบัติหลักของแอปพลิเคชัน
+2. เทคโนโลยีที่ควรใช้
+3. โครงสร้างโค้ดเบื้องต้น
+4. แนวทางการทดสอบ
+"""
+
+# เริ่ม group chat
+result = code_agent.run_group_chat(group_chat, topic)
+print(f"ผลลัพธ์ของ group chat:\n{result['summary']}")
+```
+
+## การทำงานกับไฟล์และข้อมูล
+
+### การทำงานกับไฟล์ JSON
+
+```python
+import json
+from lib.agents.autogen import CodeAgent
+
+# สร้าง code agent
+code_agent = CodeAgent(api_key=api_key)
+
+# สร้างข้อมูล JSON
+json_data = {
+    "users": [
+        {"id": 1, "name": "John Doe", "email": "john@example.com", "active": True},
+        {"id": 2, "name": "Jane Smith", "email": "jane@example.com", "active": True},
+        {"id": 3, "name": "Bob Johnson", "email": "bob@example.com", "active": False},
+    ],
+    "settings": {
+        "theme": "dark",
+        "language": "th",
+        "notifications": True,
+    },
+}
+
+# บันทึกข้อมูลลงในไฟล์ JSON
+with open("data.json", "w", encoding="utf-8") as f:
+    json.dump(json_data, f, ensure_ascii=False, indent=4)
+
+# อ่านข้อมูลจากไฟล์ JSON
+with open("data.json", "r", encoding="utf-8") as f:
+    loaded_data = json.load(f)
+```
+
+### การทำงานกับไฟล์ CSV
+
+```python
+import csv
+from lib.agents.autogen import CodeAgent
+
+# สร้าง code agent
+code_agent = CodeAgent(api_key=api_key)
+
+# สร้างข้อมูล CSV
+csv_data = [
+    ["id", "name", "email", "active"],
+    [1, "John Doe", "john@example.com", True],
+    [2, "Jane Smith", "jane@example.com", True],
+    [3, "Bob Johnson", "bob@example.com", False],
+]
+
+# บันทึกข้อมูลลงในไฟล์ CSV
+with open("data.csv", "w", newline="", encoding="utf-8") as f:
+    writer = csv.writer(f)
+    writer.writerows(csv_data)
+
+# อ่านข้อมูลจากไฟล์ CSV
+with open("data.csv", "r", encoding="utf-8") as f:
+    reader = csv.reader(f)
+    loaded_csv_data = list(reader)
+```
+
+### การแปลงข้อมูลระหว่างรูปแบบ
+
+```python
+import json
+import csv
+from lib.agents.autogen import CodeAgent, ResearchAgent
+
+# สร้าง agents
+code_agent = CodeAgent(api_key=api_key)
+research_agent = ResearchAgent(api_key=api_key)
+
+# อ่านข้อมูลจากไฟล์ CSV
+with open("data.csv", "r", encoding="utf-8") as f:
+    reader = csv.reader(f)
+    headers = next(reader)  # อ่านส่วนหัว
+    csv_data = list(reader)
+
+# แปลงข้อมูล CSV เป็น JSON
+json_data = []
+for row in csv_data:
+    item = {}
+    for i, value in enumerate(row):
+        # แปลงค่า boolean
+        if value.lower() == "true":
+            value = True
+        elif value.lower() == "false":
+            value = False
+        # แปลงค่า integer
+        elif value.isdigit():
+            value = int(value)
+        
+        item[headers[i]] = value
+    
+    json_data.append(item)
+
+# บันทึกข้อมูลที่แปลงแล้วลงในไฟล์ JSON
+with open("csv_to_json.json", "w", encoding="utf-8") as f:
+    json.dump({"users": json_data}, f, ensure_ascii=False, indent=4)
+
+# วิเคราะห์ข้อมูลโดยใช้ ResearchAgent
+data_to_analyze = json.dumps(json_data, ensure_ascii=False, indent=2)
+analysis_result = research_agent.analyze_data(data_to_analyze)
+```
+
+## การตั้งค่า Configuration
+
+### การตั้งค่า AutoGen
+
+AutoGen สามารถตั้งค่าได้ผ่านไฟล์ `scripts/config.py`:
+
+```python
+# AutoGen configuration
+AUTOGEN_CONFIG = {
+    "model": "gpt-4",  # โมเดลที่ใช้สำหรับ AutoGen
+    "temperature": 0.7,  # ค่าความสุ่มในการตอบ
+    "max_tokens": 2000,  # จำนวน token สูงสุดต่อการตอบ
+}
+```
+
+### การใช้งาน Configuration
+
+```python
+from scripts.config import AUTOGEN_CONFIG, validate_config
+
+# ตรวจสอบการตั้งค่า
+if validate_config():
+    # ใช้งานการตั้งค่า
+    model = AUTOGEN_CONFIG["model"]
+    temperature = AUTOGEN_CONFIG["temperature"]
+    
+    # สร้าง agent ด้วยการตั้งค่าที่กำหนด
+    agent = AutoGenAgent(
+        name="my_agent",
+        system_message="คุณเป็นผู้ช่วยที่ช่วยตอบคำถาม",
+        model=model,
+        temperature=temperature
+    )
+else:
+    print("กรุณาตั้งค่า configuration ให้ถูกต้อง")
+```
+
+### การตั้งค่า Environment Variables
+
+ต้องตั้งค่า environment variables ต่อไปนี้:
+
+```bash
+# OpenAI API Key สำหรับ AutoGen
+export OPENAI_API_KEY=your-api-key
+```
+
+หรือสร้างไฟล์ `.env` ในโฟลเดอร์หลักของโปรเจค:
+
+```
+OPENAI_API_KEY=your-api-key
+```
+
+## ตัวอย่างการใช้งาน
+
+### ตัวอย่างการใช้งาน AutoGen
+
+```python
+#!/usr/bin/env python3
+"""
+ตัวอย่างการใช้งาน AutoGen
+"""
+
+import os
+from lib.agents.autogen import CodeAgent, ResearchAgent, CreativeAgent
+
+# ตรวจสอบ API key
+api_key = os.getenv("OPENAI_API_KEY")
+if not api_key:
+    print("กรุณาตั้งค่า OPENAI_API_KEY ในตัวแปรสภาพแวดล้อม")
+    exit(1)
+
+# สร้าง agents
+code_agent = CodeAgent(api_key=api_key)
+research_agent = ResearchAgent(api_key=api_key)
+creative_agent = CreativeAgent(api_key=api_key)
+
+# ตัวอย่างการใช้งาน CodeAgent
+code_description = "เขียนฟังก์ชัน Python สำหรับคำนวณค่าเฉลี่ยของรายการตัวเลข"
+code_result = code_agent.write_code(code_description)
+print(f"คำอธิบาย: {code_description}")
+print(f"โค้ดที่ได้:\n{code_result}")
+
+# ตัวอย่างการใช้งาน ResearchAgent
+research_topic = "ประโยชน์ของ Python ในการพัฒนาเว็บแอปพลิเคชัน"
+research_result = research_agent.research(research_topic)
+print(f"หัวข้อ: {research_topic}")
+print(f"ผลการค้นคว้า:\n{research_result}")
+
+# ตัวอย่างการใช้งาน CreativeAgent
+article_topic = "อนาคตของปัญญาประดิษฐ์ในประเทศไทย"
+article_result = creative_agent.write_article(article_topic, length="short")
+print(f"หัวข้อ: {article_topic}")
+print(f"บทความ:\n{article_result}")
+```
+
+### ตัวอย่างการใช้งาน AutoGen Group Chat
+
+```python
+#!/usr/bin/env python3
+"""
+ตัวอย่างการใช้งาน AutoGen Group Chat
+"""
+
+import os
+from lib.agents.autogen import CodeAgent, ResearchAgent, CreativeAgent
+
+# ตรวจสอบ API key
+api_key = os.getenv("OPENAI_API_KEY")
+if not api_key:
+    print("กรุณาตั้งค่า OPENAI_API_KEY ในตัวแปรสภาพแวดล้อม")
+    exit(1)
+
+# สร้าง agents
+code_agent = CodeAgent(api_key=api_key)
+research_agent = ResearchAgent(api_key=api_key)
+creative_agent = CreativeAgent(api_key=api_key)
+
+# สร้าง group chat
+group_chat = code_agent.create_group_chat(
+    agents=[research_agent.agent, creative_agent.agent],
+    group_name="project_planning"
+)
+
+# กำหนดหัวข้อสำหรับ group chat
+topic = """
+เราต้องการพัฒนาแอปพลิเคชัน Python สำหรับการจัดการงาน (Task Management)
+กรุณาช่วยวางแผนการพัฒนาแอปพลิเคชันนี้ โดยพิจารณาถึง:
+1. คุณสมบัติหลักของแอปพลิเคชัน
+2. เทคโนโลยีที่ควรใช้
+3. โครงสร้างโค้ดเบื้องต้น
+4. แนวทางการทดสอบ
+"""
+
+# เริ่ม group chat
+result = code_agent.run_group_chat(group_chat, topic)
+print(f"ผลลัพธ์ของ group chat:\n{result['summary']}")
+```
+
+### ตัวอย่างการใช้งาน AutoGen ในการทำงานกับไฟล์และข้อมูล
+
+```python
+#!/usr/bin/env python3
+"""
+ตัวอย่างการใช้งาน AutoGen ในการทำงานกับไฟล์และข้อมูล
+"""
+
+import os
+import json
+import csv
+from lib.agents.autogen import CodeAgent, ResearchAgent
+
+# ตรวจสอบ API key
+api_key = os.getenv("OPENAI_API_KEY")
+if not api_key:
+    print("กรุณาตั้งค่า OPENAI_API_KEY ในตัวแปรสภาพแวดล้อม")
+    exit(1)
+
+# สร้าง agents
+code_agent = CodeAgent(api_key=api_key)
+research_agent = ResearchAgent(api_key=api_key)
+
+# ตัวอย่างการสร้างไฟล์ JSON
+print("\n=== ตัวอย่างการสร้างไฟล์ JSON ===")
+
+# สร้างข้อมูล JSON
+json_data = {
+    "users": [
+        {"id": 1, "name": "John Doe", "email": "john@example.com", "active": True},
+        {"id": 2, "name": "Jane Smith", "email": "jane@example.com", "active": True},
+        {"id": 3, "name": "Bob Johnson", "email": "bob@example.com", "active": False},
+    ],
+    "settings": {
+        "theme": "dark",
+        "language": "th",
+        "notifications": True,
+    },
+}
+
+# บันทึกข้อมูลลงในไฟล์ JSON
+with open("data.json", "w", encoding="utf-8") as f:
+    json.dump(json_data, f, ensure_ascii=False, indent=4)
+
+# อ่านข้อมูลจากไฟล์ JSON
+with open("data.json", "r", encoding="utf-8") as f:
+    loaded_data = json.load(f)
+
+print("ข้อมูล JSON ที่สร้าง:")
+print(json.dumps(loaded_data, ensure_ascii=False, indent=2))
+
+# ตัวอย่างการสร้างไฟล์ CSV
+print("\n=== ตัวอย่างการสร้างไฟล์ CSV ===")
+
+# สร้างข้อมูล CSV
+csv_data = [
+    ["id", "name", "email", "active"],
+    [1, "John Doe", "john@example.com", True],
+    [2, "Jane Smith", "jane@example.com", True],
+    [3, "Bob Johnson", "bob@example.com", False],
+]
+
+# บันทึกข้อมูลลงในไฟล์ CSV
+with open("data.csv", "w", newline="", encoding="utf-8") as f:
+    writer = csv.writer(f)
+    writer.writerows(csv_data)
+
+# อ่านข้อมูลจากไฟล์ CSV
+with open("data.csv", "r", encoding="utf-8") as f:
+    reader = csv.reader(f)
+    loaded_csv_data = list(reader)
+
+print("ข้อมูล CSV ที่สร้าง:")
+for row in loaded_csv_data:
+    print(row)
+
+# ตัวอย่างการแปลงข้อมูล CSV เป็น JSON
+print("\n=== ตัวอย่างการแปลงข้อมูล CSV เป็น JSON ===")
+
+# อ่านข้อมูลจากไฟล์ CSV
+with open("data.csv", "r", encoding="utf-8") as f:
+    reader = csv.reader(f)
+    headers = next(reader)  # อ่านส่วนหัว
+    csv_data = list(reader)
+
+# แปลงข้อมูล CSV เป็น JSON
+json_data = []
+for row in csv_data:
+    item = {}
+    for i, value in enumerate(row):
+        # แปลงค่า boolean
+        if value.lower() == "true":
+            value = True
+        elif value.lower() == "false":
+            value = False
+        # แปลงค่า integer
+        elif value.isdigit():
+            value = int(value)
+        
+        item[headers[i]] = value
+    
+    json_data.append(item)
+
+# บันทึกข้อมูลที่แปลงแล้วลงในไฟล์ JSON
+with open("csv_to_json.json", "w", encoding="utf-8") as f:
+    json.dump({"users": json_data}, f, ensure_ascii=False, indent=4)
+
+print("ข้อมูลที่แปลงจาก CSV เป็น JSON:")
+print(json.dumps(json_data, ensure_ascii=False, indent=2))
+
+# ตัวอย่างการวิเคราะห์ข้อมูล
+print("\n=== ตัวอย่างการวิเคราะห์ข้อมูล ===")
+
+# วิเคราะห์ข้อมูลโดยใช้ ResearchAgent
+data_to_analyze = json.dumps(json_data, ensure_ascii=False, indent=2)
+analysis_result = research_agent.analyze_data(data_to_analyze)
+
+print("ผลการวิเคราะห์ข้อมูล:")
+print(analysis_result)
+```
+
+## ข้อจำกัดและข้อควรระวัง
+
+1. **ค่าใช้จ่าย**: การใช้งาน AutoGen ต้องใช้ API ของ OpenAI ซึ่งมีค่าใช้จ่าย
+2. **ข้อจำกัดของ API**: OpenAI API มีข้อจำกัดในการใช้งาน เช่น จำนวน token สูงสุดต่อการเรียก
+3. **ความปลอดภัย**: ควรระวังการส่งข้อมูลที่สำคัญหรือข้อมูลส่วนตัวไปยัง API
+4. **ประสิทธิภาพ**: การใช้งาน AutoGen อาจใช้เวลานานขึ้นอยู่กับความซับซ้อนของงาน
+5. **การตั้งค่า**: ควรตรวจสอบการตั้งค่าใน `scripts/config.py` ก่อนใช้งาน

@@ -33,4 +33,4 @@ updates:
     commit-message:
       prefix: "⬆️"
       include: "scope"
-    target-branch: "main" 
+    target-branch: "main"

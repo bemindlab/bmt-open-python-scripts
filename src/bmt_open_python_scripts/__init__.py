@@ -7,4 +7,4 @@ BMT Open Python Scripts
 
 __version__ = "0.1.0"
 __author__ = "Bemind Technology"
-__email__ = "inf@bemind.tech" 
+__email__ = "inf@bemind.tech"
