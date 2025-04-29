@@ -1,0 +1,12 @@
+include LICENSE
+include README.md
+include CHANGELOG.md
+include requirements.txt
+include requirements-dev.txt
+
+recursive-include src/bmt_open_python_scripts *.py
+recursive-include src/bmt_open_python_scripts *.json
+recursive-include src/bmt_open_python_scripts *.yaml
+recursive-include src/bmt_open_python_scripts *.yml
+recursive-include src/bmt_open_python_scripts *.txt
+recursive-include src/bmt_open_python_scripts *.md 

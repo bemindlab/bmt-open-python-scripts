@@ -1,0 +1,91 @@
+- name: bug
+  color: d73a4a
+  description: บั๊กที่ต้องแก้ไข
+
+- name: documentation
+  color: 0075ca
+  description: การปรับปรุงหรือเพิ่มเติมเอกสาร
+
+- name: enhancement
+  color: a2eeef
+  description: ฟีเจอร์หรือการปรับปรุงใหม่
+
+- name: good first issue
+  color: 7057ff
+  description: เหมาะสำหรับผู้เริ่มต้น
+
+- name: help wanted
+  color: 008672
+  description: ต้องการความช่วยเหลือจากชุมชน
+
+- name: invalid
+  color: e4e669
+  description: ไม่สามารถแก้ไขหรือไม่เกี่ยวข้อง
+
+- name: question
+  color: d876e3
+  description: คำถามที่ต้องการคำตอบ
+
+- name: wontfix
+  color: ffffff
+  description: จะไม่ดำเนินการแก้ไข
+
+- name: dependencies
+  color: 0366d6
+  description: การอัปเดต dependencies
+
+- name: security
+  color: ee0701
+  description: ปัญหาด้านความปลอดภัย
+
+- name: performance
+  color: 40c4ff
+  description: การปรับปรุงประสิทธิภาพ
+
+- name: testing
+  color: 9ccc65
+  description: การทดสอบและ CI/CD
+
+- name: feature
+  color: 84b6eb
+  description: ฟีเจอร์ใหม่
+
+- name: duplicate
+  color: cfd3d7
+  description: ปัญหาที่ซ้ำซ้อน
+
+- name: work-in-progress
+  color: fbca04
+  description: กำลังดำเนินการ
+
+- name: needs-review
+  color: ff69b4
+  description: ต้องการการตรวจสอบ
+
+- name: blocked
+  color: b60205
+  description: ติดปัญหาไม่สามารถดำเนินการต่อได้
+
+- name: high-priority
+  color: d93f0b
+  description: ต้องการการแก้ไขด่วน
+
+- name: low-priority
+  color: 0e8a16
+  description: สามารถรอการแก้ไขได้
+
+- name: python
+  color: 3572A5
+  description: เกี่ยวข้องกับ Python
+
+- name: github_actions
+  color: 2088FF
+  description: เกี่ยวข้องกับ GitHub Actions
+
+- name: webcam
+  color: FF69B4
+  description: เกี่ยวข้องกับสคริปต์ Webcam
+
+- name: git
+  color: F05032
+  description: เกี่ยวข้องกับสคริปต์ Git 

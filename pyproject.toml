@@ -1,0 +1,57 @@
+[build-system]
+requires = ["setuptools>=45", "wheel", "setuptools_scm>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bmt-open-python-scripts"
+version = "0.0.1"
+description = "ชุดสคริปต์ Python สำหรับการทำงานต่างๆ"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.12"
+authors = [
+    {name = "BMT Open Source", email = "inf@bemind.tech"}
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent",
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Utilities",
+]
+dependencies = [
+    "opencv-python>=4.8.0",
+    "numpy>=1.24.0",
+    "rich>=13.0.0",
+    "click>=8.0.0",
+]
+
+[project.scripts]
+bmtlab = "bmt_open_python_scripts.main:main"
+
+[project.urls]
+"Bug Reports" = "https://github.com/bemindlab/bmt-open-python-scripts/issues"
+"Source" = "https://github.com/bemindlab/bmt-open-python-scripts"
+"Documentation" = "https://github.com/bemindlab/bmt-open-python-scripts/wiki"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+packages = ["bmt_open_python_scripts"]
+
+[tool.setuptools_scm]
+write_to = "src/bmt_open_python_scripts/_version.py"
+version_file = "src/bmt_open_python_scripts/_version.py"
+version_scheme = "post-release"
+local_scheme = "node-and-date"
+
+[tool.black]
+line-length = 88
+target-version = ['py312']
+include = '\.pyi?$'
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3 
