@@ -9,7 +9,7 @@ import cv2
 import sys
 import os
 from datetime import datetime
-from scripts.config import WEBCAM_CONFIG
+from bmt_scripts.config import WEBCAM_CONFIG
 from typing import Optional, Tuple
 
 def stream_camera(

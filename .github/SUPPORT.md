@@ -6,12 +6,12 @@
 
 ### 1. เอกสารประกอบ
 - [README.md](../README.md) - ข้อมูลพื้นฐานและวิธีการใช้งาน
-- [Wiki](https://github.com/bemindtech/bmt-open-python-scripts/wiki) - เอกสารประกอบการใช้งานโดยละเอียด
+- [Wiki](https://github.com/bemindtech/bmt-scripts/wiki) - เอกสารประกอบการใช้งานโดยละเอียด
 - [CONTRIBUTING.md](../CONTRIBUTING.md) - วิธีการมีส่วนร่วมในโปรเจค
 
 ### 2. การรายงานปัญหา
-- [GitHub Issues](https://github.com/bemindtech/bmt-open-python-scripts/issues) - รายงานข้อผิดพลาดหรือขอฟีเจอร์ใหม่
-- [Security Issues](https://github.com/bemindtech/bmt-open-python-scripts/security) - รายงานปัญหาด้านความปลอดภัย
+- [GitHub Issues](https://github.com/bemindtech/bmt-scripts/issues) - รายงานข้อผิดพลาดหรือขอฟีเจอร์ใหม่
+- [Security Issues](https://github.com/bemindtech/bmt-scripts/security) - รายงานปัญหาด้านความปลอดภัย
 
 ### 3. การติดต่อโดยตรง
 - อีเมล: support@bemindtech.com
@@ -22,20 +22,20 @@
 ### Q: ฉันจะติดตั้งแพ็คเกจอย่างไร?
 A: คุณสามารถติดตั้งแพ็คเกจได้ผ่าน pip:
 ```bash
-pip install bmt-open-python-scripts
+pip install bmt-scripts
 ```
 
 ### Q: ฉันจะอัปเดตแพ็คเกจเป็นเวอร์ชันล่าสุดได้อย่างไร?
 A: ใช้คำสั่ง:
 ```bash
-pip install --upgrade bmt-open-python-scripts
+pip install --upgrade bmt-scripts
 ```
 
 ### Q: ฉันจะเพิ่มสคริปต์ใหม่ได้อย่างไร?
 A: กรุณาอ่าน [CONTRIBUTING.md](../CONTRIBUTING.md) สำหรับขั้นตอนการเพิ่มสคริปต์ใหม่
 
 ### Q: ฉันจะรายงานข้อผิดพลาดได้อย่างไร?
-A: กรุณาใช้ [GitHub Issues](https://github.com/bemindtech/bmt-open-python-scripts/issues) และกรอกข้อมูลตามแม่แบบที่กำหนด
+A: กรุณาใช้ [GitHub Issues](https://github.com/bemindtech/bmt-scripts/issues) และกรอกข้อมูลตามแม่แบบที่กำหนด
 
 ## การสนับสนุนโปรเจค
 

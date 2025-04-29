@@ -18,29 +18,92 @@
 ### 1. ติดตั้ง AutoGen ผ่าน pip
 
 ```bash
-pip install pyautogen
+# ติดตั้งแพ็คเกจเสริมสำหรับ AI agent
+pip install "bmt-scripts[agents]"
+
+# ติดตั้ง OpenAI
+pip install "ag2[openai]"
 ```
 
 ### 2. ตั้งค่า API key สำหรับ OpenAI
+
+คุณจะต้องมี API key จาก OpenAI ก่อน ถ้ายังไม่มี ให้ทำตามขั้นตอนต่อไปนี้:
+
+1. ไปที่ [OpenAI Platform](https://platform.openai.com/)
+2. เข้าสู่ระบบหรือสร้างบัญชีใหม่
+3. ไปที่ [Billing settings](https://platform.openai.com/account/billing/overview)
+4. เพิ่มวิธีการชำระเงิน (Add payment method)
+5. เพิ่มเงินเข้าไปในบัญชี (Add credits)
+6. ไปที่ [API keys](https://platform.openai.com/api-keys)
+7. คลิก "Create new secret key"
+8. ตั้งชื่อให้กับ key (เช่น "BMT Scripts")
+9. คัดลอก API key ที่ได้
+
+จากนั้นตั้งค่า API key ด้วยวิธีใดวิธีหนึ่งต่อไปนี้:
+
+#### วิธีที่ 1: ตั้งค่าผ่านตัวแปรสภาพแวดล้อม
 
 ```bash
 export OPENAI_API_KEY=your-api-key
 ```
 
-หรือสร้างไฟล์ `.env` ในโฟลเดอร์หลักของโปรเจค:
+#### วิธีที่ 2: สร้างไฟล์ .env
+
+สร้างไฟล์ `.env` ในโฟลเดอร์หลักของโปรเจค:
 
 ```
 OPENAI_API_KEY=your-api-key
 ```
 
+### การแก้ไขปัญหา
+
+#### 1. ปัญหา API key ไม่ถูกต้อง
+
+ถ้าคุณเจอข้อผิดพลาด:
+```
+Error code: 401 - Invalid Authentication
+```
+
+แสดงว่า API key ไม่ถูกต้อง ให้ตรวจสอบว่า:
+- API key ถูกต้องและยังไม่หมดอายุ
+- ตั้งค่า API key ถูกต้องในไฟล์ `.env` หรือตัวแปรสภาพแวดล้อม
+
+#### 2. ปัญหาโควต้าไม่เพียงพอ
+
+ถ้าคุณเจอข้อผิดพลาด:
+```
+Error code: 429 - You exceeded your current quota
+```
+
+แสดงว่าโควต้าการใช้งานไม่เพียงพอ ให้:
+1. ตรวจสอบยอดเงินคงเหลือที่ [Billing usage](https://platform.openai.com/account/usage)
+2. เพิ่มเงินในบัญชีที่ [Billing settings](https://platform.openai.com/account/billing/overview)
+
 ## การใช้งานพื้นฐาน
 
-### AutoGenAgent
+### การใช้งานผ่าน CLI
+
+```bash
+# แสดงหมวดหมู่และคำสั่งทั้งหมด
+bmtlab --help
+
+# แสดงคำสั่งของ AI agent
+bmtlab agents --help
+
+# ใช้ AutoGen agents
+bmtlab agents autogen code --prompt "เขียนฟังก์ชันคำนวณตัวเลข Fibonacci"
+bmtlab agents autogen research --topic "แนวทางปฏิบัติที่ดีของ Python"
+bmtlab agents autogen creative --topic "การสำรวจอวกาศ" --type article
+```
+
+### การใช้งานผ่าน Python
+
+#### AutoGenAgent
 
 คลาสหลักสำหรับการใช้งาน AutoGen ซึ่งเป็นพื้นฐานสำหรับ agents อื่นๆ ทั้งหมด
 
 ```python
-from lib.agents.autogen import AutoGenAgent
+from bmt_libs.agents.autogen import AutoGenAgent
 
 # สร้าง agent
 agent = AutoGenAgent(
@@ -72,7 +135,7 @@ result = agent.run_group_chat(group_chat, "หัวข้อสำหรับ 
 Agent สำหรับการเขียนและแก้ไขโค้ด
 
 ```python
-from lib.agents.autogen import CodeAgent
+from bmt_libs.agents.autogen import CodeAgent
 
 # สร้าง code agent
 code_agent = CodeAgent(api_key="your-api-key")
@@ -83,7 +146,7 @@ code = code_agent.write_code("เขียนฟังก์ชัน Python ส
 # แก้ไขบั๊กในโค้ด
 fixed_code = code_agent.fix_bug(
     code="def add(a, b): return a - b",  # โค้ดที่มีบั๊ก
-    error_message="ฟังก์ชัน add ควรบวกเลข而不是ลบเลข"  # ข้อความแสดงข้อผิดพลาด
+    error_message="ฟังก์ชัน add ควรบวกเลข ลบเลข"  # ข้อความแสดงข้อผิดพลาด
 )
 
 # ปรับปรุงโค้ดให้มีประสิทธิภาพและอ่านง่ายขึ้น
@@ -104,7 +167,7 @@ refactored_code = code_agent.refactor_code(
 Agent สำหรับการค้นคว้าและวิเคราะห์ข้อมูล
 
 ```python
-from lib.agents.autogen import ResearchAgent
+from bmt_libs.agents.autogen import ResearchAgent
 
 # สร้าง research agent
 research_agent = ResearchAgent(api_key="your-api-key")
@@ -121,7 +184,7 @@ analysis_result = research_agent.analyze_data("ข้อมูลที่ต้
 Agent สำหรับการสร้างเนื้อหาเชิงสร้างสรรค์
 
 ```python
-from lib.agents.autogen import CreativeAgent
+from bmt_libs.agents.autogen import CreativeAgent
 
 # สร้าง creative agent
 creative_agent = CreativeAgent(api_key="your-api-key")
@@ -141,7 +204,7 @@ ideas = creative_agent.generate_ideas("แอปพลิเคชันสำ�
 ### Group Chat
 
 ```python
-from lib.agents.autogen import CodeAgent, ResearchAgent, CreativeAgent
+from bmt_libs.agents.autogen import CodeAgent, ResearchAgent, CreativeAgent
 
 # สร้าง agents
 code_agent = CodeAgent(api_key="your-api-key")
@@ -175,7 +238,7 @@ print(f"ผลลัพธ์ของ group chat:\n{result['summary']}")
 
 ```python
 import json
-from lib.agents.autogen import CodeAgent
+from bmt_libs.agents.autogen import CodeAgent
 
 # สร้าง code agent
 code_agent = CodeAgent(api_key=api_key)
@@ -207,7 +270,7 @@ with open("data.json", "r", encoding="utf-8") as f:
 
 ```python
 import csv
-from lib.agents.autogen import CodeAgent
+from bmt_libs.agents.autogen import CodeAgent
 
 # สร้าง code agent
 code_agent = CodeAgent(api_key=api_key)
@@ -236,7 +299,7 @@ with open("data.csv", "r", encoding="utf-8") as f:
 ```python
 import json
 import csv
-from lib.agents.autogen import CodeAgent, ResearchAgent
+from bmt_libs.agents.autogen import CodeAgent, ResearchAgent
 
 # สร้าง agents
 code_agent = CodeAgent(api_key=api_key)
@@ -293,7 +356,7 @@ AUTOGEN_CONFIG = {
 ### การใช้งาน Configuration
 
 ```python
-from scripts.config import AUTOGEN_CONFIG, validate_config
+from bmt_scripts.configimport AUTOGEN_CONFIG, validate_config
 
 # ตรวจสอบการตั้งค่า
 if validate_config():
@@ -338,7 +401,7 @@ OPENAI_API_KEY=your-api-key
 """
 
 import os
-from lib.agents.autogen import CodeAgent, ResearchAgent, CreativeAgent
+from bmt_libs.agents.autogen import CodeAgent, ResearchAgent, CreativeAgent
 
 # ตรวจสอบ API key
 api_key = os.getenv("OPENAI_API_KEY")
@@ -379,7 +442,7 @@ print(f"บทความ:\n{article_result}")
 """
 
 import os
-from lib.agents.autogen import CodeAgent, ResearchAgent, CreativeAgent
+from bmt_libs.agents.autogen import CodeAgent, ResearchAgent, CreativeAgent
 
 # ตรวจสอบ API key
 api_key = os.getenv("OPENAI_API_KEY")
@@ -424,7 +487,7 @@ print(f"ผลลัพธ์ของ group chat:\n{result['summary']}")
 import os
 import json
 import csv
-from lib.agents.autogen import CodeAgent, ResearchAgent
+from bmt_libs.agents.autogen import CodeAgent, ResearchAgent
 
 # ตรวจสอบ API key
 api_key = os.getenv("OPENAI_API_KEY")
@@ -529,9 +592,6 @@ print("\n=== ตัวอย่างการวิเคราะห์ข้�
 # วิเคราะห์ข้อมูลโดยใช้ ResearchAgent
 data_to_analyze = json.dumps(json_data, ensure_ascii=False, indent=2)
 analysis_result = research_agent.analyze_data(data_to_analyze)
-
-print("ผลการวิเคราะห์ข้อมูล:")
-print(analysis_result)
 ```
 
 ## ข้อจำกัดและข้อควรระวัง
@@ -540,4 +600,78 @@ print(analysis_result)
 2. **ข้อจำกัดของ API**: OpenAI API มีข้อจำกัดในการใช้งาน เช่น จำนวน token สูงสุดต่อการเรียก
 3. **ความปลอดภัย**: ควรระวังการส่งข้อมูลที่สำคัญหรือข้อมูลส่วนตัวไปยัง API
 4. **ประสิทธิภาพ**: การใช้งาน AutoGen อาจใช้เวลานานขึ้นอยู่กับความซับซ้อนของงาน
-5. **การตั้งค่า**: ควรตรวจสอบการตั้งค่าใน `scripts/config.py` ก่อนใช้งาน
+5. **การตั้งค่า**: ควรตรวจสอบการตั้งค่าใน `bmt-scripts/config/settings.py` ก่อนใช้งาน
+
+## การแก้ไขปัญหาที่พบบ่อย
+
+### 1. ImportError: AutoGen is not available
+
+ถ้าคุณเจอข้อผิดพลาด:
+```
+Error: AutoGen is not available. Install with: pip install 'bmt-scripts[agents]'
+```
+
+แสดงว่ายังไม่ได้ติดตั้งแพ็คเกจเสริมสำหรับ AI agent ให้รันคำสั่ง:
+```bash
+pip install "bmt-scripts[agents]"
+```
+
+### 2. ImportError: 'openai' is not installed
+
+ถ้าคุณเจอข้อผิดพลาด:
+```
+ImportError: A module needed for autogen.oai.client.create_openai_client is missing:
+ - 'openai' is not installed.
+```
+
+แสดงว่ายังไม่ได้ติดตั้งแพ็คเกจ OpenAI ให้รันคำสั่ง:
+```bash
+pip install "ag2[openai]"
+```
+
+### 3. Error: Invalid Authentication
+
+ถ้าคุณเจอข้อผิดพลาด:
+```
+Error code: 401 - Invalid Authentication
+```
+
+แสดงว่า API key ไม่ถูกต้อง ให้ตรวจสอบว่า:
+- API key ถูกต้องและยังไม่หมดอายุ
+- ตั้งค่า API key ถูกต้องในไฟล์ `.env` หรือตัวแปรสภาพแวดล้อม
+
+### 4. Error: Insufficient Quota
+
+ถ้าคุณเจอข้อผิดพลาด:
+```
+Error code: 429 - You exceeded your current quota
+```
+
+แสดงว่าโควต้าการใช้งานไม่เพียงพอ ให้:
+1. ตรวจสอบยอดเงินคงเหลือที่ [Billing usage](https://platform.openai.com/account/usage)
+2. เพิ่มเงินในบัญชีที่ [Billing settings](https://platform.openai.com/account/billing/overview)
+
+### 5. Error: Model not found
+
+ถ้าคุณเจอข้อผิดพลาด:
+```
+Error code: 404 - The model `gpt-4` does not exist or you do not have access to it
+```
+
+แสดงว่าคุณไม่มีสิทธิ์เข้าถึงโมเดลที่ระบุ ให้:
+1. ตรวจสอบว่าคุณมีสิทธิ์เข้าถึงโมเดลที่ต้องการใช้
+2. ลองเปลี่ยนไปใช้โมเดลอื่นที่คุณมีสิทธิ์เข้าถึง เช่น `gpt-3.5-turbo`
+
+### 6. ปัญหาอื่นๆ
+
+ถ้าคุณเจอปัญหาอื่นๆ ให้:
+1. ตรวจสอบว่าติดตั้งแพ็คเกจทั้งหมดครบถ้วน:
+   ```bash
+   pip install "bmt-scripts[all]"
+   ```
+2. อัปเดตแพ็คเกจให้เป็นเวอร์ชันล่าสุด:
+   ```bash
+   pip install --upgrade "bmt-scripts[all]"
+   ```
+3. ตรวจสอบ log เพื่อดูรายละเอียดข้อผิดพลาด
+4. รายงานปัญหาที่พบที่ [GitHub Issues](https://github.com/bemindlab/bmt-open-python-scripts/issues)

@@ -1,6 +1,6 @@
 # GitHub Workflows
 
-เอกสารนี้อธิบายเกี่ยวกับ GitHub Workflows ที่ใช้ในโปรเจค bmt-open-python-scripts
+เอกสารนี้อธิบายเกี่ยวกับ GitHub Workflows ที่ใช้ในโปรเจค bmt-scripts
 
 ## Pre-commit Hooks
 

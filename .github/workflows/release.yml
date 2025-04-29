@@ -43,8 +43,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/bmt_open_python_scripts-${{ github.ref_name }}.tar.gz
-          asset_name: bmt_open_python_scripts-${{ github.ref_name }}.tar.gz
+          asset_path: ./dist/bmt_scripts-${{ github.ref_name }}.tar.gz
+          asset_name: bmt_scripts-${{ github.ref_name }}.tar.gz
           asset_content_type: application/gzip
 
     #   - name: Publish to PyPI

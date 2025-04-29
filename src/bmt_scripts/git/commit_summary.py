@@ -140,23 +140,32 @@ def main():
         changed_files = get_changed_files()
 
         print(f"กำลังสร้างสรุปการ commit {commit_info.hash} ...")
-        print("หมายเหตุ: กรุณาใช้ Cursor AI เพื่อวิเคราะห์คำขอต่อไปนี้:")
+        print("หมายเหตุ: กรุณาใช้ LLM AI เพื่อวิเคราะห์คำขอต่อไปนี้:")
         print("\n" + generate_prompt(commit_info, changed_files))
-        print("\nหลังจากได้รับสรุปจาก Cursor AI แล้ว กรุณาบันทึกเพื่อดำเนินการต่อ")
+        print("\nหลังจากได้รับสรุปจาก LLM AI แล้ว กรุณาบันทึกเพื่อดำเนินการต่อ")
 
-        print("\nกด Enter หลังจากที่คุณได้รับสรุปจาก Cursor AI แล้ว...")
+        print("\nกด Enter หลังจากที่คุณได้รับสรุปจาก LLM AI แล้ว...")
         input()
 
-        print("กรุณาวางสรุปจาก Cursor AI (กด Ctrl+D เมื่อเสร็จสิ้น):")
+        print("กรุณาวางสรุปจาก LLM AI (กด Ctrl+D เมื่อเสร็จสิ้น):")
 
         # รับข้อมูลจากผู้ใช้
         summary_lines = []
         try:
             while True:
-                line = input()
-                summary_lines.append(line)
-        except EOFError:
-            pass
+                try:
+                    line = input()
+                    if line.strip():  # เพิ่มการตรวจสอบบรรทัดว่าง
+                        summary_lines.append(line)
+                except EOFError:
+                    break
+        except KeyboardInterrupt:
+            print("\nยกเลิกการทำงาน")
+            return
+
+        if not summary_lines:
+            print("ไม่พบข้อมูลสรุป กรุณาลองใหม่อีกครั้ง")
+            return
 
         summary = "\n".join(summary_lines).strip()
 

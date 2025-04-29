@@ -7,12 +7,12 @@ import cv2
 import sys
 import os
 from datetime import datetime
-from scripts.config import WEBCAM_CONFIG
+from bmt_scripts.config import WEBCAM_CONFIG
 from typing import Optional, Tuple
 
 def record_video(
     camera_id: int = 0,
-    output_dir: str = "recordings",
+    output_dir: str = "_output_/recordings",
     duration: Optional[int] = None,
     frame_width: int = 1280,
     frame_height: int = 720,
@@ -137,7 +137,7 @@ def main():
     """
     # รับพารามิเตอร์จาก command line arguments
     camera_id = 0
-    output_dir = "recordings"
+    output_dir = "_output_/recordings"
     duration = 60
     
     if len(sys.argv) > 1:

@@ -4,7 +4,7 @@
 """
 
 from typing import List, Dict, Any
-from lib.hardware.camera import list_available_webcams
+import cv2
 
 def list_cameras() -> List[Dict[str, Any]]:
     """
@@ -13,7 +13,28 @@ def list_cameras() -> List[Dict[str, Any]]:
     Returns:
         List[Dict[str, Any]]: รายการกล้องที่มีในระบบ
     """
-    return list_available_webcams()
+    available_cameras = []
+    
+    # Try to open cameras from index 0 to 10
+    for i in range(10):
+        cap = cv2.VideoCapture(i)
+        if cap.isOpened():
+            # Get camera properties
+            width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+            height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+            fps = cap.get(cv2.CAP_PROP_FPS)
+            
+            camera_info = {
+                "id": i,
+                "width": width,
+                "height": height,
+                "fps": fps
+            }
+            
+            available_cameras.append(camera_info)
+            cap.release()
+    
+    return available_cameras
 
 def main():
     """
@@ -28,8 +49,8 @@ def main():
     
     print(f"พบเว็บแคมทั้งหมด {len(cameras)} อุปกรณ์:")
     for camera in cameras:
-        print(f"- {camera['name']} (ID: {camera['index']})")
-        print(f"  ความละเอียด: {camera['resolution']}")
+        print(f"- กล้อง ID: {camera['id']}")
+        print(f"  ความละเอียด: {camera['width']}x{camera['height']}")
         print(f"  FPS: {camera['fps']}")
 
 if __name__ == "__main__":

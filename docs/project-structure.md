@@ -1,258 +1,140 @@
-# โครงสร้างโปรเจค (Project Structure)
+# โครงสร้างโปรเจค
 
-เอกสารนี้อธิบายโครงสร้างของโปรเจค BMT Open Python Scripts
+BMT Open Python Scripts จัดระเบียบเป็นแพ็คเกจ Python มาตรฐานด้วยโครงสร้างดังนี้:
 
-## โครงสร้างหลัก
+## การจัดระเบียบไดเรกทอรี
 
 ```
-bmt-open-python-scripts/
-├── .github/                    # การตั้งค่า GitHub
-│   └── workflows/             # GitHub Actions workflows
-│       ├── release.yml        # Workflow สำหรับการ release
-│       └── test.yml           # Workflow สำหรับการทดสอบ
-│
-├── docs/                      # เอกสาร
-│   ├── autogen.md            # เอกสาร AutoGen
-│   ├── project-structure.md  # เอกสารโครงสร้างโปรเจค
-│   ├── release.md            # เอกสารการ release
-│   └── testing.md            # เอกสารการทดสอบ
-│
-├── lib/                       # โมดูลหลัก
-│   ├── agents/               # โมดูล agents
+bmt-scripts/
+├── src/                        # โค้ดหลักของแพ็คเกจ
+│   ├── __init__.py             # ไฟล์มาร์คเกอร์แพ็คเกจหลัก
+│   ├── bmt_libs/               # โมดูลไลบรารี (ใช้งานภายใน)
 │   │   ├── __init__.py
-│   │   └── autogen.py        # โมดูล AutoGen
-│   │
-│   ├── utils/                # โมดูล utilities
-│   │   ├── __init__.py
-│   │   ├── file.py          # ฟังก์ชันสำหรับการจัดการไฟล์
-│   │   └── logger.py        # ฟังก์ชันสำหรับการ logging
-│   │
-│   └── __init__.py
-│
-├── scripts/                   # สคริปต์หลัก
-│   ├── config.py             # การตั้งค่า configuration
-│   ├── git/                  # สคริปต์ Git
-│   │   ├── __init__.py
-│   │   └── commit_summary.py # สคริปต์สรุป commit
-│   │
-│   ├── webcam/               # สคริปต์กล้องเว็บแคม
-│   │   ├── __init__.py
-│   │   ├── list.py          # สคริปต์แสดงรายการกล้อง
-│   │   └── show.py          # สคริปต์แสดงภาพจากกล้อง
-│   │
-│   └── __init__.py
-│
-├── tests/                    # โมดูลทดสอบ
+│   │   ├── agents/             # การใช้งาน Agents
+│   │   │   └── autogen/        # ไลบรารี Microsoft AutoGen
+│   │   │       ├── __init__.py
+│   │   │       └── core.py
+│   │   └── hardware/           # ไลบรารีสำหรับเข้าถึงฮาร์ดแวร์
+│   │       ├── __init__.py
+│   │       ├── camera.py       # ยูทิลิตี้กล้อง
+│   │       └── screen.py       # ยูทิลิตี้หน้าจอ
+│   └── bmt_scripts/            # โมดูลสคริปต์ที่สามารถรันได้
+│       ├── __init__.py         # การเริ่มต้นแพ็คเกจ
+│       ├── _version.py         # ข้อมูลเวอร์ชันที่สร้างขึ้น
+│       ├── cli.py              # หน้าต่างการทำงานผ่านคำสั่ง
+│       ├── main.py             # จุดเริ่มต้นหลัก
+│       ├── config/             # การจัดการการตั้งค่า
+│       │   ├── __init__.py
+│       │   └── settings.py
+│       ├── hardware/           # สคริปต์ฮาร์ดแวร์
+│       │   ├── __init__.py
+│       │   └── screen_capture.py # ยูทิลิตี้การจับภาพหน้าจอ
+│       ├── webcam/             # ฟังก์ชันการทำงานของเว็บแคม
+│       │   ├── __init__.py
+│       │   ├── capture.py
+│       │   └── ...
+│       ├── git/                # ยูทิลิตี้ Git
+│       │   ├── __init__.py
+│       │   └── commit_summary.py
+│       ├── plugins/            # ระบบ Plugin
+│       │   ├── README.md
+│       │   ├── plugin_manager.py
+│       │   └── example/
+│       └── agents/             # สคริปต์ AI agent
+│           ├── autogen_code.py
+│           ├── autogen_example.py
+│           └── mockup.py
+├── tests/                      # ไฟล์ทดสอบ
 │   ├── __init__.py
-│   ├── test_config.py       # ทดสอบ configuration
-│   ├── test_webcam_list.py  # ทดสอบการแสดงรายการกล้อง
-│   └── test_webcam_show.py  # ทดสอบการแสดงภาพจากกล้อง
-│
-├── .env                      # ไฟล์ environment variables
-├── .gitignore               # ไฟล์ที่ Git จะไม่ติดตาม
-├── CHANGELOG.md             # ประวัติการเปลี่ยนแปลง
-├── LICENSE                  # ใบอนุญาต
-├── README.md                # เอกสารหลัก
-├── pyproject.toml           # การตั้งค่า Poetry
-└── requirements.txt         # Dependencies
+│   └── ...
+├── docs/                       # เอกสาร
+├── pyproject.toml              # การตั้งค่าและข้อมูลเมตาของโปรเจค
+└── README.md
 ```
 
-## รายละเอียดแต่ละส่วน
+## การจัดระเบียบแพ็คเกจ
 
-### 1. `.github/`
+โปรเจคนี้เป็นไปตามโครงสร้างแพ็คเกจ Python มาตรฐานโดยแยกความรับผิดชอบ:
 
-โฟลเดอร์สำหรับการตั้งค่า GitHub:
+1. **แพ็คเกจไลบรารี (`src/bmt_libs/`)**: ประกอบด้วยโค้ดที่นำกลับมาใช้ใหม่และฟังก์ชันการทำงานที่ใช้ร่วมกัน:
+   - `agents/autogen/`: ไลบรารีและการใช้งาน Agent หลัก
+   - `hardware/`: โมดูลการโต้ตอบกับฮาร์ดแวร์หลัก
+     - `camera.py`: ฟังก์ชันการทำงานของกล้อง
+     - `screen.py`: ฟังก์ชันการทำงานของหน้าจอ
 
-- `workflows/`: ไฟล์ GitHub Actions workflows
-  - `release.yml`: Workflow สำหรับการ release
-  - `test.yml`: Workflow สำหรับการทดสอบ
+2. **แพ็คเกจสคริปต์ (`src/bmt_scripts/`)**: ประกอบด้วยสคริปต์ที่สามารถรันได้ซึ่งใช้ไลบรารี:
+   - `cli.py`: ให้อินเตอร์เฟซแบบรวมเพื่อเข้าถึงฟังก์ชันการทำงานทั้งหมดผ่านคำสั่ง `bmtlab`
+   - `main.py`: จุดเริ่มต้นหลักสำหรับการรันสคริปต์
+   - แพ็คเกจย่อยตามโดเมน:
+     - `webcam/`: เครื่องมือเว็บแคมที่ใช้ bmt_libs.hardware.camera
+     - `git/`: ยูทิลิตี้ที่เกี่ยวข้องกับ Git
+     - `agents/`: สคริปต์ AI agent ที่ใช้ bmt_libs.agents.autogen
+     - `hardware/`: สคริปต์ฮาร์ดแวร์ที่ใช้ bmt_libs.hardware
+     - `config/`: การจัดการการตั้งค่า
+     - `plugins/`: ระบบ Plugin สำหรับการขยายความสามารถ
 
-### 2. `docs/`
+## การติดตั้ง
 
-โฟลเดอร์สำหรับเอกสาร:
-
-- `autogen.md`: เอกสาร AutoGen
-- `project-structure.md`: เอกสารโครงสร้างโปรเจค
-- `release.md`: เอกสารการ release
-- `testing.md`: เอกสารการทดสอบ
-
-### 3. `lib/`
-
-โฟลเดอร์สำหรับโมดูลหลัก:
-
-- `agents/`: โมดูล agents
-  - `autogen.py`: โมดูล AutoGen
-- `utils/`: โมดูล utilities
-  - `file.py`: ฟังก์ชันสำหรับการจัดการไฟล์
-  - `logger.py`: ฟังก์ชันสำหรับการ logging
-
-### 4. `scripts/`
-
-โฟลเดอร์สำหรับสคริปต์หลัก:
-
-- `config.py`: การตั้งค่า configuration
-- `git/`: สคริปต์ Git
-  - `commit_summary.py`: สคริปต์สรุป commit
-- `webcam/`: สคริปต์กล้องเว็บแคม
-  - `list.py`: สคริปต์แสดงรายการกล้อง
-  - `show.py`: สคริปต์แสดงภาพจากกล้อง
-
-### 5. `tests/`
-
-โฟลเดอร์สำหรับโมดูลทดสอบ:
-
-- `test_config.py`: ทดสอบ configuration
-- `test_webcam_list.py`: ทดสอบการแสดงรายการกล้อง
-- `test_webcam_show.py`: ทดสอบการแสดงภาพจากกล้อง
-
-### 6. ไฟล์หลัก
-
-- `.env`: ไฟล์ environment variables
-- `.gitignore`: ไฟล์ที่ Git จะไม่ติดตาม
-- `CHANGELOG.md`: ประวัติการเปลี่ยนแปลง
-- `LICENSE`: ใบอนุญาต
-- `README.md`: เอกสารหลัก
-- `pyproject.toml`: การตั้งค่า Poetry
-- `requirements.txt`: Dependencies
-
-## การตั้งค่า Configuration
-
-การตั้งค่า Configuration อยู่ในไฟล์ `scripts/config.py`:
-
-```python
-# Configuration สำหรับสคริปต์ต่างๆ
-WEBCAM_CONFIG = {
-    "default_camera": 0,
-    "frame_width": 640,
-    "frame_height": 480,
-    "fps": 30,
-}
-
-GIT_CONFIG = {
-    "max_commits": 10,
-    "exclude_patterns": [
-        "*.log",
-        "*.tmp",
-        "__pycache__",
-    ],
-}
-
-AUTOGEN_CONFIG = {
-    "model": "gpt-4",
-    "temperature": 0.7,
-    "max_tokens": 2000,
-}
-```
-
-## การตั้งค่า Environment Variables
-
-ต้องตั้งค่า environment variables ต่อไปนี้:
+สามารถติดตั้งแพ็คเกจในโหมดการพัฒนาได้:
 
 ```bash
-# OpenAI API Key สำหรับ AutoGen
-export OPENAI_API_KEY=your-api-key
+pip install -e .
 ```
 
-หรือสร้างไฟล์ `.env` ในโฟลเดอร์หลักของโปรเจค:
+หรือติดตั้งพร้อมกับแพ็คเกจเสริม:
 
-```
-OPENAI_API_KEY=your-api-key
-```
-
-## การตั้งค่า GitHub Actions
-
-### 1. Release Workflow
-
-ไฟล์ `.github/workflows/release.yml`:
-
-```yaml
-name: Release
-
-on:
-  push:
-    tags:
-      - 'v*'
-
-jobs:
-  release:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.9'
-      
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install build twine
-      
-      - name: Validate configuration
-        run: |
-          python -c "from scripts.config import validate_config; assert validate_config()"
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      
-      - name: Run tests
-        run: |
-          pip install pytest
-          python -m pytest
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      
-      - name: Build package
-        run: python -m build
-      
-      - name: Upload to PyPI
-        run: |
-          python -m twine upload dist/*
-        env:
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+```bash
+pip install -e ".[agents]"     # ติดตั้งพร้อมกับแพ็คเกจเสริมสำหรับ AI agent
+pip install -e ".[hardware]"   # ติดตั้งพร้อมกับแพ็คเกจเสริมสำหรับฮาร์ดแวร์
+pip install -e ".[dev]"        # ติดตั้งพร้อมกับแพ็คเกจเสริมสำหรับการพัฒนา
+pip install -e ".[all]"        # ติดตั้งพร้อมกับแพ็คเกจเสริมทั้งหมด
 ```
 
-### 2. Test Workflow
+## การใช้งาน
 
-ไฟล์ `.github/workflows/test.yml`:
+หลังจากติดตั้งแล้ว คุณสามารถใช้แพ็คเกจได้สองวิธี:
 
-```yaml
-name: Test
+1. **หน้าต่างการทำงานผ่านคำสั่ง**:
+   ```bash
+   bmtlab webcam show --camera-id 0
+   bmtlab git commit-summary
+   ```
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+2. **ใช้เป็นไลบรารี Python**:
+   ```python
+   # ใช้โมดูลสคริปต์
+   from bmt_scripts.webcam import show_camera
+   
+   show_camera(camera_id=0)
+   
+   # ใช้โมดูลไลบรารี
+   from bmt_libs.hardware.camera import Camera
+   
+   camera = Camera(camera_id=0)
+   frame = camera.capture_frame()
+   ```
 
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.9'
-      
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install pytest pytest-mock opencv-python
-      
-      - name: Run tests
-        run: |
-          python -m pytest
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+## การจัดการการพึ่งพา
+
+การจัดการการพึ่งพาทำใน `pyproject.toml`:
+
+- การพึ่งพาหลัก: จำเป็นสำหรับฟังก์ชันการทำงานพื้นฐาน
+- การพึ่งพาเสริม:
+  - `agents`: สำหรับฟังก์ชันการทำงานของ AI agent
+  - `dev`: สำหรับการพัฒนาและการทดสอบ
+
+## การตั้งค่า
+
+การตั้งค่าจัดการผ่าน `config/settings.py` และให้:
+
+- การตั้งค่าตามโดเมน (webcam, git, agents)
+- การจัดการตัวแปรสภาพแวดล้อม
+- การตรวจสอบความถูกต้องของการตั้งค่า
+
+## การทดสอบ
+
+การทดสอบจัดระเบียบในไดเรกทอรี `tests/` และสามารถรันได้ด้วย:
+
+```bash
+pytest
 ```
-
-## หมายเหตุ
-
-- โครงสร้างโปรเจคถูกออกแบบให้เป็นระเบียบและง่ายต่อการบำรุงรักษา
-- แต่ละโมดูลมีหน้าที่ชัดเจนและไม่ซ้ำซ้อนกัน
-- การตั้งค่า Configuration อยู่ในไฟล์เดียวเพื่อความสะดวกในการจัดการ
-- มีการทดสอบครอบคลุมทุกโมดูล
-- มีการตั้งค่า GitHub Actions สำหรับการ release และการทดสอบ

@@ -4,9 +4,9 @@ include CHANGELOG.md
 include requirements.txt
 include requirements-dev.txt
 
-recursive-include src/bmt_open_python_scripts *.py
-recursive-include src/bmt_open_python_scripts *.json
-recursive-include src/bmt_open_python_scripts *.yaml
-recursive-include src/bmt_open_python_scripts *.yml
-recursive-include src/bmt_open_python_scripts *.txt
-recursive-include src/bmt_open_python_scripts *.md
+recursive-include src *.py
+recursive-include src *.json
+recursive-include src *.yaml
+recursive-include src *.yml
+recursive-include src *.txt
+recursive-include src *.md

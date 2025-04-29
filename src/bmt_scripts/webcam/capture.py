@@ -7,12 +7,12 @@ import cv2
 import sys
 import os
 from datetime import datetime
-from scripts.config import WEBCAM_CONFIG
+from bmt_scripts.config import WEBCAM_CONFIG
 from typing import Optional, Tuple
 
 def capture_image(
     camera_id: int = 0,
-    output_dir: str = "captures",
+    output_dir: str = "_output_/captures",
     frame_width: int = 1280,
     frame_height: int = 720,
     show_preview: bool = True
@@ -176,7 +176,7 @@ def main():
     """
     # รับพารามิเตอร์จาก command line arguments
     camera_id = 0
-    output_dir = "captures"
+    output_dir = "_output_/captures"
     
     if len(sys.argv) > 1:
         try:

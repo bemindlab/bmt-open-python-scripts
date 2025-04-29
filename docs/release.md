@@ -115,7 +115,7 @@ version="1.0.0"
 
 1. ตรวจสอบการตั้งค่า Configuration:
    ```python
-   from scripts.config import validate_config
+   from bmt_scripts.configimport validate_config
    
    # ตรวจสอบการตั้งค่า
    if not validate_config():
@@ -141,7 +141,7 @@ version="1.0.0"
 
 ```toml
 [tool.poetry]
-name = "bmt-open-python-scripts"
+name = "bmt-scripts"
 version = "0.1.0"  # อัปเดตเวอร์ชันตามความเหมาะสม
 ```
 
@@ -245,7 +245,7 @@ jobs:
       
       - name: Validate configuration
         run: |
-          python -c "from scripts.config import validate_config; assert validate_config()"
+          python -c "from bmt_scripts.configimport validate_config; assert validate_config()"
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       
@@ -282,7 +282,7 @@ jobs:
 ตรวจสอบว่าสามารถติดตั้งแพ็คเกจได้:
 
 ```bash
-pip install bmt-open-python-scripts==0.1.0
+pip install bmt-scripts==0.1.0
 ```
 
 ### 2. ตรวจสอบการทำงาน
@@ -290,7 +290,7 @@ pip install bmt-open-python-scripts==0.1.0
 ทดสอบการทำงานของแพ็คเกจ:
 
 ```python
-from bmt_open_python_scripts.scripts.config import get_config, validate_config
+from bmt_scripts.scripts.config import get_config, validate_config
 
 # ตรวจสอบการตั้งค่า
 config = get_config()

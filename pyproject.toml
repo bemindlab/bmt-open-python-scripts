@@ -3,9 +3,9 @@ requires = ["setuptools>=45", "wheel", "setuptools_scm>=6.2"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "bmt-open-python-scripts"
+name = "bmt-scripts"
 version = "0.0.1"
-description = "ชุดสคริปต์ Python สำหรับการทำงานต่างๆ"
+description = "Python script collection for various tasks"
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.12"
@@ -27,24 +27,48 @@ dependencies = [
     "numpy>=1.24.0",
     "rich>=13.0.0",
     "click>=8.0.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+agents = [
     "pyautogen>=0.2.0",
+    "python-dotenv>=1.0.0",
+]
+hardware = [
+    "opencv-python>=4.8.0",
+    "numpy>=1.24.0",
+    "pyautogui>=0.9.54",
+]
+dev = [
+    "pytest>=7.0.0",
+    "black>=22.0.0",
+    "isort>=5.0.0",
+    "mypy>=1.0.0",
+    "bandit>=1.7.0",
+]
+all = [
+    "pyautogen>=0.2.0",
+    "python-dotenv>=1.0.0",
+    "opencv-python>=4.8.0",
+    "numpy>=1.24.0", 
+    "pyautogui>=0.9.54",
 ]
 
 [project.scripts]
-bmtlab = "bmt_open_python_scripts.main:main"
+bmtlab = "bmt_scripts.cli:main"
 
 [project.urls]
-"Bug Reports" = "https://github.com/bemindlab/bmt-open-python-scripts/issues"
-"Source" = "https://github.com/bemindlab/bmt-open-python-scripts"
-"Documentation" = "https://github.com/bemindlab/bmt-open-python-scripts/wiki"
+"Bug Reports" = "https://github.com/bemindlab/bmt-scripts/issues"
+"Source" = "https://github.com/bemindlab/bmt-scripts"
+"Documentation" = "https://github.com/bemindlab/bmt-scripts/wiki"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
-packages = ["bmt_open_python_scripts"]
+packages = ["bmt_libs", "bmt_scripts"]
 
 [tool.setuptools_scm]
-write_to = "src/bmt_open_python_scripts/_version.py"
-version_file = "src/bmt_open_python_scripts/_version.py"
+write_to = "src/bmt_scripts/_version.py"
 version_scheme = "post-release"
 local_scheme = "node-and-date"
 

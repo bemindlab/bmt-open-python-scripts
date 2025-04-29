@@ -61,7 +61,7 @@ Fixtures ใช้สำหรับเตรียมสภาพแวดล�
 
 ```python
 import pytest
-from scripts.config import get_config, validate_config
+from bmt_scripts.configimport get_config, validate_config
 
 @pytest.fixture
 def config():
@@ -93,7 +93,7 @@ def autogen_config():
 
 ```python
 import pytest
-from scripts.config import get_config, validate_config, WEBCAM_CONFIG, GIT_CONFIG, AUTOGEN_CONFIG
+from bmt_scripts.configimport get_config, validate_config, WEBCAM_CONFIG, GIT_CONFIG, AUTOGEN_CONFIG
 
 def test_get_config():
     """ทดสอบฟังก์ชัน get_config"""
@@ -145,7 +145,7 @@ def test_validate_config(monkeypatch):
 import pytest
 from unittest.mock import patch, MagicMock
 from scripts.webcam.list import list_cameras
-from scripts.config import WEBCAM_CONFIG
+from bmt_scripts.configimport WEBCAM_CONFIG
 
 def test_list_cameras():
     """ทดสอบฟังก์ชัน list_cameras"""
@@ -194,7 +194,7 @@ def test_show_camera(webcam_config):
 import pytest
 from unittest.mock import patch, MagicMock
 from scripts.git.commit_summary import generate_commit_summary
-from scripts.config import GIT_CONFIG
+from bmt_scripts.configimport GIT_CONFIG
 
 def test_generate_commit_summary(git_config):
     """ทดสอบฟังก์ชัน generate_commit_summary"""
@@ -229,7 +229,7 @@ def test_generate_commit_summary(git_config):
 import pytest
 from unittest.mock import patch, MagicMock
 from lib.agents.autogen import CodeAgent, ResearchAgent, CreativeAgent
-from scripts.config import AUTOGEN_CONFIG
+from bmt_scripts.configimport AUTOGEN_CONFIG
 
 def test_code_agent(autogen_config):
     """ทดสอบ CodeAgent"""
@@ -282,7 +282,7 @@ def test_research_agent(autogen_config):
 
 ```python
 import pytest
-from scripts.config import get_config, validate_config
+from bmt_scripts.configimport get_config, validate_config
 from scripts.webcam.list import list_cameras
 from scripts.webcam.show import show_camera
 from scripts.git.commit_summary import generate_commit_summary
@@ -353,7 +353,7 @@ def test_autogen_integration(autogen_config):
 ```python
 import pytest
 import time
-from scripts.config import get_config
+from bmt_scripts.configimport get_config
 
 def test_config_performance():
     """ทดสอบประสิทธิภาพการทำงานของฟังก์ชัน get_config"""
@@ -372,7 +372,7 @@ def test_config_performance():
 
 ```python
 import pytest
-from scripts.config import validate_config
+from bmt_scripts.configimport validate_config
 
 def test_config_security():
     """ทดสอบความปลอดภัยของการตั้งค่า"""

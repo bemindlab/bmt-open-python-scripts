@@ -35,4 +35,4 @@
 
 หากมีคำถามเกี่ยวกับความปลอดภัย สามารถติดต่อได้ที่:
 - อีเมล: security@bemind.tech
-- GitHub Security: [Security Tab](https://github.com/bemindlab/bmt-open-python-scripts/security)
+- GitHub Security: [Security Tab](https://github.com/bemindlab/bmt-scripts/security)
