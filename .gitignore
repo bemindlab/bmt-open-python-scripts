@@ -23,6 +23,7 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+tmp
 
 # Virtual environments
 venv/
@@ -84,3 +85,4 @@ dmypy.json
 
 # output
 _output_
+

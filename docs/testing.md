@@ -18,13 +18,13 @@ tests/
 
 1. สร้าง virtual environment:
 ```bash
-python -m venv venv
+python -m venv .venv
 ```
 
 2. เปิดใช้งาน virtual environment:
 ```bash
 # สำหรับ Unix/macOS
-source venv/bin/activate
+source .venv/bin/activate
 
 # สำหรับ Windows
 .\venv\Scripts\activate

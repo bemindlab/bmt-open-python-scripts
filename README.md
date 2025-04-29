@@ -55,7 +55,7 @@ cd bmt-open-python-scripts
 
 2. สร้างสภาพแวดล้อมเสมือน:
 ```bash
-python -m venv venv
+python -m venv .venv
 source venv/bin/activate  # สำหรับ Linux/Mac
 # หรือ
 .\venv\Scripts\activate  # สำหรับ Windows
