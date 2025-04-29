@@ -4,7 +4,9 @@ Script for displaying camera feed
 """
 
 import sys
+
 from bmt_scripts.webcam.stream import stream_camera
+
 
 def show_camera(camera_id: int = 0) -> None:
     """
@@ -14,6 +16,7 @@ def show_camera(camera_id: int = 0) -> None:
         camera_id (int): ID ของกล้อง (default: 0)
     """
     stream_camera(camera_id)
+
 
 def main():
     """Main function for showing camera feed"""
@@ -25,8 +28,9 @@ def main():
         except ValueError:
             print("Camera ID must be a number")
             return
-    
+
     show_camera(camera_id)
+
 
 if __name__ == "__main__":
     main()

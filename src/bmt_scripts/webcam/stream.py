@@ -5,17 +5,18 @@ Stream Module
 โมดูลสำหรับการสตรีมภาพจากกล้องเว็บแคม
 """
 
-import cv2
-import sys
 import os
+import sys
 from datetime import datetime
-from bmt_scripts.config import WEBCAM_CONFIG
 from typing import Optional, Tuple
 
+import cv2
+
+from bmt_scripts.config import WEBCAM_CONFIG
+
+
 def stream_camera(
-    camera_id: int = 0,
-    window_name: str = "Camera Stream",
-    exit_key: str = 'q'
+    camera_id: int = 0, window_name: str = "Camera Stream", exit_key: str = "q"
 ) -> None:
     """
     สตรีมภาพจากกล้องเว็บแคม
@@ -49,6 +50,7 @@ def stream_camera(
         cap.release()
         cv2.destroyAllWindows()
 
+
 def get_camera_info(camera_id: int = 0) -> Tuple[int, int, float]:
     """
     ดึงข้อมูลของกล้อง
@@ -74,6 +76,7 @@ def get_camera_info(camera_id: int = 0) -> Tuple[int, int, float]:
     finally:
         cap.release()
 
+
 def list_available_cameras(max_cameras: int = 10) -> list:
     """
     แสดงรายการกล้องที่ใช้งานได้
@@ -85,14 +88,15 @@ def list_available_cameras(max_cameras: int = 10) -> list:
         list: รายการ ID ของกล้องที่ใช้งานได้
     """
     available_cameras = []
-    
+
     for i in range(max_cameras):
         cap = cv2.VideoCapture(i)
         if cap.isOpened():
             available_cameras.append(i)
             cap.release()
-    
+
     return available_cameras
+
 
 def main():
     """
@@ -101,18 +105,19 @@ def main():
     # รับพารามิเตอร์จาก command line arguments
     camera_id = 0
     output_dir = "streams"
-    
+
     if len(sys.argv) > 1:
         try:
             camera_id = int(sys.argv[1])
         except ValueError:
             print("ID ของกล้องต้องเป็นตัวเลข")
             return
-    
+
     if len(sys.argv) > 2:
         output_dir = sys.argv[2]
-    
+
     stream_camera(camera_id, output_dir)
 
+
 if __name__ == "__main__":
-    main() 
+    main()

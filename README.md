@@ -137,7 +137,7 @@ for idx, name in cameras.items():
 camera = Camera(camera_id=0)
 frame = camera.capture_frame()
 camera.save_image(frame, "screenshot.jpg")
-        
+
 # ใช้การจับภาพหน้าจอ
 screen = Screen()
 screenshot = screen.capture()

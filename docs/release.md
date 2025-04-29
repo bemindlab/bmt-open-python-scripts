@@ -116,7 +116,7 @@ version="1.0.0"
 1. ตรวจสอบการตั้งค่า Configuration:
    ```python
    from bmt_scripts.configimport validate_config
-   
+
    # ตรวจสอบการตั้งค่า
    if not validate_config():
        print("กรุณาตั้งค่า environment variables ให้ครบถ้วน")
@@ -232,33 +232,33 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      
+
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: '3.9'
-      
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install build twine
-      
+
       - name: Validate configuration
         run: |
           python -c "from bmt_scripts.configimport validate_config; assert validate_config()"
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      
+
       - name: Run tests
         run: |
           pip install pytest
           python -m pytest
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      
+
       - name: Build package
         run: python -m build
-      
+
       - name: Upload to PyPI
         run: |
           python -m twine upload dist/*

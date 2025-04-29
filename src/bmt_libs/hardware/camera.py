@@ -29,7 +29,7 @@ class Webcam:
         self.cap = None
         self.writer = None
         self.is_recording = False
-        
+
         # กำหนดไดเรกทอรีตามระบบปฏิบัติการ
         if platform.system() == "Darwin":  # macOS
             self.save_dir = str(Path.home() / "Pictures" / "webcam")
@@ -37,11 +37,11 @@ class Webcam:
             self.save_dir = str(Path.home() / "Pictures" / "webcam")
         else:  # Linux และอื่นๆ
             self.save_dir = str(Path.home() / "Pictures" / "webcam")
-            
+
         # สร้างไดเรกทอรีถ้ายังไม่มี
         try:
             Path(self.save_dir).mkdir(parents=True, exist_ok=True)
-        except Exception as e:
+        except Exception:
             # ถ้าไม่สามารถสร้างไดเรกทอรีได้ ให้ใช้ไดเรกทอรีชั่วคราว
             self.save_dir = str(Path(os.getcwd()) / "tmp" / "webcam")
             Path(self.save_dir).mkdir(parents=True, exist_ok=True)
@@ -55,7 +55,7 @@ class Webcam:
         """
         try:
             self.cap = cv2.VideoCapture(self.camera_index)
-            if not self.cap.isOpened():
+            if self.cap is None or not self.cap.isOpened():
                 self.cap = None
                 return False
             return True
@@ -78,13 +78,16 @@ class Webcam:
         Returns:
             Tuple[bool, Optional[np.ndarray]]: (สถานะการอ่าน, เฟรมที่อ่านได้)
         """
-        if self.cap is None or not self.cap.isOpened():
+        if self.cap is None:
             raise RuntimeError("กล้องยังไม่ได้เปิด")
-        return self.cap.read()
+        if not self.cap.isOpened():
+            raise RuntimeError("กล้องไม่ได้เปิดใช้งาน")
+        success, frame = self.cap.read()
+        return success, frame
 
     def get_property(self, prop_id: int) -> float:
         """
-        รับค่าคุณสมบัติของเว็บแคม
+        รับค่าคุณสมบัติของกล้อง
 
         Args:
             prop_id (int): รหัสคุณสมบัติ
@@ -92,8 +95,10 @@ class Webcam:
         Returns:
             float: ค่าคุณสมบัติ
         """
-        if self.cap is None or not self.cap.isOpened():
+        if self.cap is None:
             raise RuntimeError("กล้องยังไม่ได้เปิด")
+        if not self.cap.isOpened():
+            raise RuntimeError("กล้องไม่ได้เปิดใช้งาน")
         return self.cap.get(prop_id)
 
     def save_image(self, frame: np.ndarray, filename: Optional[str] = None) -> str:
@@ -128,8 +133,10 @@ class Webcam:
         if self.is_recording:
             raise RuntimeError("กำลังบันทึกวิดีโออยู่")
 
-        if self.cap is None or not self.cap.isOpened():
-            raise RuntimeError("ไม่สามารถเริ่มบันทึกวิดีโอได้ เนื่องจากไม่ได้เปิดการเชื่อมต่อกับเว็บแคม")
+        if self.cap is None:
+            raise RuntimeError("กล้องยังไม่ได้เปิด")
+        if not self.cap.isOpened():
+            raise RuntimeError("กล้องไม่ได้เปิดใช้งาน")
 
         if filename is None:
             timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -143,7 +150,7 @@ class Webcam:
         fps = int(self.get_property(cv2.CAP_PROP_FPS))
 
         # สร้าง VideoWriter
-        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        fourcc = cv2.VideoWriter_fourcc(*"mp4v")
         self.writer = cv2.VideoWriter(save_path, fourcc, fps, (width, height))
         self.is_recording = True
 
@@ -222,7 +229,7 @@ def list_available_webcams() -> List[Dict[str, Union[int, str, float]]]:
                 "index": i,
                 "name": f"Webcam {i}",  # ชื่อเริ่มต้น
                 "resolution": f"{width}x{height}",
-                "fps": fps
+                "fps": fps,
             }
             available_webcams.append(webcam_info)
         cap.release()

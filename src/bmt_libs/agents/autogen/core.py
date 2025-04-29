@@ -10,26 +10,31 @@ from typing import Any, Dict, List, Optional, Union
 try:
     import autogen
     from dotenv import load_dotenv
-    
+
     # Load environment variables from .env file
     load_dotenv()
-    
+
     AUTOGEN_AVAILABLE = True
 except ImportError:
     AUTOGEN_AVAILABLE = False
-    
+
     # Create dummy classes/imports for type checking when autogen is not available
     class DummyClass:
         """Dummy class when autogen is not available"""
+
         pass
-    
-    autogen = type('autogen', (), {
-        'AssistantAgent': DummyClass,
-        'UserProxyAgent': DummyClass,
-        'Agent': DummyClass,
-        'GroupChat': DummyClass,
-        'GroupChatManager': DummyClass,
-    })
+
+    autogen = type(
+        "autogen",
+        (),
+        {
+            "AssistantAgent": DummyClass,
+            "UserProxyAgent": DummyClass,
+            "Agent": DummyClass,
+            "GroupChat": DummyClass,
+            "GroupChatManager": DummyClass,
+        },
+    )
 
 
 class AutoGenAgent:
@@ -55,14 +60,16 @@ class AutoGenAgent:
             raise ImportError(
                 "AutoGen is not available. Install with: pip install 'bmt-scripts[agents]'"
             )
-            
+
         self.name = name
         self.system_message = system_message
         self.api_key = api_key or os.getenv("OPENAI_API_KEY")
-        
+
         if not self.api_key:
-            raise ValueError("API key not specified. Please provide api_key or set OPENAI_API_KEY environment variable")
-        
+            raise ValueError(
+                "API key not specified. Please provide api_key or set OPENAI_API_KEY environment variable"
+            )
+
         # Configure LLM config
         self.llm_config = llm_config or {
             "config_list": [
@@ -74,24 +81,26 @@ class AutoGenAgent:
             "temperature": 0.7,
             "timeout": 600,
         }
-        
+
         # Create agent
         self.agent = autogen.AssistantAgent(
             name=self.name,
             system_message=self.system_message,
             llm_config=self.llm_config,
         )
-        
+
         # Create user proxy agent
         self.user_proxy = autogen.UserProxyAgent(
             name="user_proxy",
             human_input_mode="NEVER",
             max_consecutive_auto_reply=10,
-            is_termination_msg=lambda x: x.get("content", "").rstrip().endswith("TERMINATE"),
+            is_termination_msg=lambda x: x.get("content", "")
+            .rstrip()
+            .endswith("TERMINATE"),
             code_execution_config={"work_dir": "workspace"},
             llm_config=self.llm_config,
         )
-    
+
     def chat(self, message: str) -> str:
         """
         Send message to agent and get response
@@ -107,10 +116,10 @@ class AutoGenAgent:
             self.agent,
             message=message,
         )
-        
+
         # Return response message
         return chat_result.summary
-    
+
     def execute_code(self, code: str) -> Dict[str, Any]:
         """
         Run code through agent
@@ -123,19 +132,19 @@ class AutoGenAgent:
         """
         # Create message with code
         message = f"```python\n{code}\n```"
-        
+
         # Start conversation
         chat_result = self.user_proxy.initiate_chat(
             self.agent,
             message=message,
         )
-        
+
         # Return results
         return {
             "summary": chat_result.summary,
             "messages": chat_result.messages,
         }
-    
+
     def create_group_chat(
         self, agents: List["autogen.Agent"], group_name: str = "group_chat"
     ) -> "autogen.GroupChat":
@@ -155,12 +164,9 @@ class AutoGenAgent:
             messages=[],
             max_round=50,
         )
-        
-        # Create group chat manager
-        manager = autogen.GroupChatManager(groupchat=group_chat)
-        
+
         return group_chat
-    
+
     def run_group_chat(
         self, group_chat: "autogen.GroupChat", message: str
     ) -> Dict[str, Any]:
@@ -179,7 +185,7 @@ class AutoGenAgent:
             group_chat,
             message=message,
         )
-        
+
         # Return results
         return {
             "summary": chat_result.summary,
@@ -208,14 +214,14 @@ class CodeAgent(AutoGenAgent):
         You can help write code, edit code, and fix bugs.
         Please write clean, efficient code that follows PEP 8 standards.
         """
-        
+
         super().__init__(
             name=name,
             system_message=system_message,
             llm_config=llm_config,
             api_key=api_key,
         )
-    
+
     def write_code(self, description: str) -> str:
         """
         Write code based on description
@@ -227,9 +233,9 @@ class CodeAgent(AutoGenAgent):
             str: Written code
         """
         message = f"Please write Python code based on the following description:\n\n{description}"
-        
+
         return self.chat(message)
-    
+
     def fix_bug(self, code: str, error_message: str) -> str:
         """
         Fix bug in code
@@ -251,9 +257,9 @@ Error message:
 {error_message}
 
 Please fix the bug in this code"""
-        
+
         return self.chat(message)
-    
+
     def refactor_code(self, code: str) -> str:
         """
         Improve code efficiency and readability
@@ -269,7 +275,7 @@ Please fix the bug in this code"""
 ```python
 {code}
 ```"""
-        
+
         return self.chat(message)
 
 
@@ -294,14 +300,14 @@ class ResearchAgent(AutoGenAgent):
         You can help research topics, analyze data, and summarize information.
         Please provide accurate information with references and useful insights.
         """
-        
+
         super().__init__(
             name=name,
             system_message=system_message,
             llm_config=llm_config,
             api_key=api_key,
         )
-    
+
     def research(self, topic: str) -> str:
         """
         Research information about given topic
@@ -313,9 +319,9 @@ class ResearchAgent(AutoGenAgent):
             str: Research results
         """
         message = f"Please research information about the following topic:\n\n{topic}"
-        
+
         return self.chat(message)
-    
+
     def analyze_data(self, data: str) -> str:
         """
         Analyze data
@@ -327,9 +333,9 @@ class ResearchAgent(AutoGenAgent):
             str: Data analysis results
         """
         message = f"Please analyze the following data:\n\n{data}"
-        
+
         return self.chat(message)
-    
+
     def summarize(self, text: str) -> str:
         """
         Summarize text
@@ -341,7 +347,7 @@ class ResearchAgent(AutoGenAgent):
             str: Summarized text
         """
         message = f"Please summarize the following text:\n\n{text}"
-        
+
         return self.chat(message)
 
 
@@ -366,14 +372,14 @@ class CreativeAgent(AutoGenAgent):
         You can help write articles, scripts, and other content.
         Please create interesting, creative, and helpful content.
         """
-        
+
         super().__init__(
             name=name,
             system_message=system_message,
             llm_config=llm_config,
             api_key=api_key,
         )
-    
+
     def write_article(self, topic: str, length: str = "medium") -> str:
         """
         Write article
@@ -386,9 +392,9 @@ class CreativeAgent(AutoGenAgent):
             str: Written article
         """
         message = f"Please write an article about the following topic, length {length}:\n\n{topic}"
-        
+
         return self.chat(message)
-    
+
     def write_script(self, description: str) -> str:
         """
         Write script
@@ -400,9 +406,9 @@ class CreativeAgent(AutoGenAgent):
             str: Written script
         """
         message = f"Please write a script based on the following description:\n\n{description}"
-        
+
         return self.chat(message)
-    
+
     def generate_ideas(self, topic: str, count: int = 5) -> str:
         """
         Generate ideas
@@ -415,5 +421,5 @@ class CreativeAgent(AutoGenAgent):
             str: Generated ideas
         """
         message = f"Please generate {count} ideas about the following topic:\n\n{topic}"
-        
+
         return self.chat(message)

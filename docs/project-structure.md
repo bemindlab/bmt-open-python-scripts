@@ -104,12 +104,12 @@ pip install -e ".[all]"        # ติดตั้งพร้อมกับ�
    ```python
    # ใช้โมดูลสคริปต์
    from bmt_scripts.webcam import show_camera
-   
+
    show_camera(camera_id=0)
-   
+
    # ใช้โมดูลไลบรารี
    from bmt_libs.hardware.camera import Camera
-   
+
    camera = Camera(camera_id=0)
    frame = camera.capture_frame()
    ```

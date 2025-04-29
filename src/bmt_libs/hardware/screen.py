@@ -25,7 +25,7 @@ class Screen:
         """
         self.writer = None
         self.is_recording = False
-        
+
         # กำหนดไดเรกทอรีตามระบบปฏิบัติการ
         if platform.system() == "Darwin":  # macOS
             self.save_dir = str(Path.home() / "Pictures" / "screen")
@@ -33,15 +33,15 @@ class Screen:
             self.save_dir = str(Path.home() / "Pictures" / "screen")
         else:  # Linux และอื่นๆ
             self.save_dir = str(Path.home() / "Pictures" / "screen")
-            
+
         # สร้างไดเรกทอรีถ้ายังไม่มี
         try:
             Path(self.save_dir).mkdir(parents=True, exist_ok=True)
-        except Exception as e:
+        except Exception:
             # ถ้าไม่สามารถสร้างไดเรกทอรีได้ ให้ใช้ไดเรกทอรีชั่วคราว
             self.save_dir = str(Path(os.getcwd()) / "tmp" / "screen")
             Path(self.save_dir).mkdir(parents=True, exist_ok=True)
-        
+
         self.screen_size = pyautogui.size()
 
     def capture_screen(self) -> np.ndarray:
@@ -59,7 +59,9 @@ class Screen:
         frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
         return frame
 
-    def save_image(self, frame: Optional[np.ndarray] = None, filename: Optional[str] = None) -> str:
+    def save_image(
+        self, frame: Optional[np.ndarray] = None, filename: Optional[str] = None
+    ) -> str:
         """
         บันทึกภาพหน้าจอ
 
@@ -104,7 +106,7 @@ class Screen:
         width, height = self.screen_size
 
         # สร้าง VideoWriter
-        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        fourcc = cv2.VideoWriter_fourcc(*"mp4v")
         fps = 20.0  # กำหนด FPS เริ่มต้น
         self.writer = cv2.VideoWriter(save_path, fourcc, fps, (width, height))
         self.is_recording = True
@@ -150,7 +152,7 @@ class Screen:
         screen_info = {
             "resolution": f"{width}x{height}",
             "width": width,
-            "height": height
+            "height": height,
         }
         return screen_info
 

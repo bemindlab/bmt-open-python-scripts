@@ -8,10 +8,10 @@ try:
     from bmt_open_python_scripts.agents.autogen.core import (
         AutoGenAgent,
         CodeAgent,
-        ResearchAgent,
         CreativeAgent,
+        ResearchAgent,
     )
-    
+
     __all__ = [
         "AutoGenAgent",
         "CodeAgent",

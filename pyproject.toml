@@ -51,7 +51,7 @@ all = [
     "pyautogen>=0.2.0",
     "python-dotenv>=1.0.0",
     "opencv-python>=4.8.0",
-    "numpy>=1.24.0", 
+    "numpy>=1.24.0",
     "pyautogui>=0.9.54",
 ]
 

@@ -81,4 +81,4 @@ plugins = plugin_manager.list_plugins()
 
 # โหลด plugins ใหม่
 plugin_manager.reload_plugins()
-``` 
+```

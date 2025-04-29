@@ -282,4 +282,4 @@ Error: Not a git repository
 หากพบปัญหาหรือมีคำถาม สามารถ:
 1. เปิด Issue ที่ [GitHub](https://github.com/bemindlab/bmt-open-python-scripts/issues)
 2. ติดต่อทีมพัฒนาผ่าน [Email](mailto:support@bemindlab.com)
-3. เข้าร่วม [Discord Community](https://discord.gg/bemindlab) 
+3. เข้าร่วม [Discord Community](https://discord.gg/bemindlab)

@@ -3,11 +3,11 @@ Configuration module for BMT Open Python Scripts
 """
 
 from bmt_scripts.config.settings import (
+    AUTOGEN_CONFIG,
+    GIT_CONFIG,
+    WEBCAM_CONFIG,
     get_config,
     validate_config,
-    WEBCAM_CONFIG,
-    GIT_CONFIG,
-    AUTOGEN_CONFIG,
 )
 
 __all__ = [

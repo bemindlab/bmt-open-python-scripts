@@ -47,4 +47,4 @@ python scripts/webcam/show.py [--index INDEX] [--window-name WINDOW_NAME]
 
 ไฟล์ที่บันทึกจะถูกเก็บในโฟลเดอร์ `~/Pictures/webcam/` โดยมีรูปแบบดังนี้:
 - ภาพถ่าย: `YYYYMMDD_HHMMSS.jpg`
-- วิดีโอ: `YYYYMMDD_HHMMSS.mp4` 
+- วิดีโอ: `YYYYMMDD_HHMMSS.mp4`

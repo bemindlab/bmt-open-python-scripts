@@ -266,18 +266,18 @@ def test_webcam_capture():
 def test_webcam_git_integration():
     webcam = WebcamCapture()
     git = GitManager()
-    
+
     # ถ่ายภาพ
     frame = webcam.capture_frame()
-    
+
     # บันทึกภาพ
     image_path = "test_image.jpg"
     webcam.save_frame(frame, image_path)
-    
+
     # Commit การเปลี่ยนแปลง
     git.add(image_path)
     commit = git.commit("เพิ่มภาพทดสอบ")
-    
+
     assert commit is not None
     assert os.path.exists(image_path)
 ```

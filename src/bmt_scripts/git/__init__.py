@@ -1,1 +1,1 @@
-"""Git scripts package.""" 
+"""Git scripts package."""

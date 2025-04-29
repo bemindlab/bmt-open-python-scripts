@@ -4,10 +4,11 @@ Configuration settings for BMT Open Python Scripts
 
 import os
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any, Dict
 
 try:
     from dotenv import load_dotenv
+
     # Load environment variables from .env file
     load_dotenv()
 except ImportError:
@@ -48,9 +49,7 @@ LOGGING_CONFIG: Dict[str, Any] = {
     "version": 1,
     "disable_existing_loggers": False,
     "formatters": {
-        "standard": {
-            "format": "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
-        },
+        "standard": {"format": "%(asctime)s [%(levelname)s] %(name)s: %(message)s"},
     },
     "handlers": {
         "default": {
@@ -59,13 +58,7 @@ LOGGING_CONFIG: Dict[str, Any] = {
             "class": "logging.StreamHandler",
         },
     },
-    "loggers": {
-        "": {
-            "handlers": ["default"],
-            "level": "INFO",
-            "propagate": True
-        }
-    }
+    "loggers": {"": {"handlers": ["default"], "level": "INFO", "propagate": True}},
 }
 
 # Cache configuration
@@ -75,6 +68,7 @@ CACHE_EXPIRY = 3600  # 1 hour in seconds
 # Plugin configuration
 PLUGIN_DIR = PROJECT_ROOT / "plugins"
 PLUGIN_CONFIG_FILE = "plugin_config.yaml"
+
 
 def get_config() -> Dict[str, Any]:
     """
@@ -92,6 +86,7 @@ def get_config() -> Dict[str, Any]:
         "autogen": AUTOGEN_CONFIG,
     }
 
+
 def validate_config() -> bool:
     """
     Validate configuration settings
@@ -102,5 +97,5 @@ def validate_config() -> bool:
     # Check environment variables
     if not os.getenv("OPENAI_API_KEY"):
         return False
-    
+
     return True

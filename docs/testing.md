@@ -98,25 +98,25 @@ from bmt_scripts.configimport get_config, validate_config, WEBCAM_CONFIG, GIT_CO
 def test_get_config():
     """ทดสอบฟังก์ชัน get_config"""
     config = get_config()
-    
+
     # ตรวจสอบว่ามีการตั้งค่าทั้งหมดครบถ้วน
     assert "env_vars" in config
     assert "webcam" in config
     assert "git" in config
     assert "autogen" in config
-    
+
     # ตรวจสอบการตั้งค่ากล้องเว็บแคม
     assert config["webcam"]["default_camera"] == 0
     assert config["webcam"]["frame_width"] == 640
     assert config["webcam"]["frame_height"] == 480
     assert config["webcam"]["fps"] == 30
-    
+
     # ตรวจสอบการตั้งค่า Git
     assert config["git"]["max_commits"] == 10
     assert "*.log" in config["git"]["exclude_patterns"]
     assert "*.tmp" in config["git"]["exclude_patterns"]
     assert "__pycache__" in config["git"]["exclude_patterns"]
-    
+
     # ตรวจสอบการตั้งค่า AutoGen
     assert config["autogen"]["model"] == "gpt-4"
     assert config["autogen"]["temperature"] == 0.7
@@ -126,13 +126,13 @@ def test_validate_config(monkeypatch):
     """ทดสอบฟังก์ชัน validate_config"""
     # จำลองการตั้งค่า OPENAI_API_KEY
     monkeypatch.setenv("OPENAI_API_KEY", "test-api-key")
-    
+
     # ตรวจสอบว่าการตั้งค่าถูกต้อง
     assert validate_config() is True
-    
+
     # จำลองการไม่ตั้งค่า OPENAI_API_KEY
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
-    
+
     # ตรวจสอบว่าการตั้งค่าไม่ถูกต้อง
     assert validate_config() is False
 ```
@@ -154,10 +154,10 @@ def test_list_cameras():
         # จำลองว่ามีกล้อง 2 ตัว
         mock_video_capture.return_value.isOpened.return_value = True
         mock_video_capture.return_value.read.return_value = (True, MagicMock())
-        
+
         # เรียกใช้ฟังก์ชัน list_cameras
         cameras = list_cameras()
-        
+
         # ตรวจสอบผลลัพธ์
         assert len(cameras) == 2
         assert cameras[0]["id"] == 0
@@ -170,18 +170,18 @@ def test_show_camera(webcam_config):
         # จำลองว่ามีกล้อง 1 ตัว
         mock_video_capture.return_value.isOpened.return_value = True
         mock_video_capture.return_value.read.return_value = (True, MagicMock())
-        
+
         # จำลองการทำงานของ cv2.imshow
         with patch("cv2.imshow") as mock_imshow:
             # จำลองการทำงานของ cv2.waitKey
             with patch("cv2.waitKey") as mock_wait_key:
                 # จำลองการกดปุ่ม 'q' เพื่อออก
                 mock_wait_key.return_value = ord('q')
-                
+
                 # เรียกใช้ฟังก์ชัน show_camera
                 from scripts.webcam.show import show_camera
                 show_camera(webcam_config["default_camera"])
-                
+
                 # ตรวจสอบว่ามีการเรียกใช้ cv2.imshow
                 mock_imshow.assert_called()
 ```
@@ -207,13 +207,13 @@ def test_generate_commit_summary(git_config):
         mock_commit.author.name = "Test Author"
         mock_commit.author.email = "test@example.com"
         mock_commit.committed_datetime = MagicMock()
-        
+
         # จำลอง repo.iter_commits
         mock_repo.return_value.iter_commits.return_value = [mock_commit] * git_config["max_commits"]
-        
+
         # เรียกใช้ฟังก์ชัน generate_commit_summary
         summary = generate_commit_summary()
-        
+
         # ตรวจสอบผลลัพธ์
         assert len(summary) == git_config["max_commits"]
         assert summary[0]["hash"] == "abc123"
@@ -239,16 +239,16 @@ def test_code_agent(autogen_config):
         mock_create.return_value = MagicMock(
             choices=[MagicMock(message=MagicMock(content="def test_function(): pass"))]
         )
-        
+
         # สร้าง CodeAgent
         code_agent = CodeAgent(api_key="test-api-key")
-        
+
         # เรียกใช้ฟังก์ชัน write_code
         code = code_agent.write_code("เขียนฟังก์ชัน Python สำหรับทดสอบ")
-        
+
         # ตรวจสอบผลลัพธ์
         assert "def test_function(): pass" in code
-        
+
         # ตรวจสอบการเรียกใช้ OpenAI API
         mock_create.assert_called_with(
             model=autogen_config["model"],
@@ -265,13 +265,13 @@ def test_research_agent(autogen_config):
         mock_create.return_value = MagicMock(
             choices=[MagicMock(message=MagicMock(content="ผลการวิจัย: Python เป็นภาษาที่ดี"))]
         )
-        
+
         # สร้าง ResearchAgent
         research_agent = ResearchAgent(api_key="test-api-key")
-        
+
         # เรียกใช้ฟังก์ชัน research
         result = research_agent.research("ประโยชน์ของ Python")
-        
+
         # ตรวจสอบผลลัพธ์
         assert "Python เป็นภาษาที่ดี" in result
 ```
@@ -295,23 +295,23 @@ def test_webcam_integration(webcam_config):
         # จำลองว่ามีกล้อง 1 ตัว
         mock_video_capture.return_value.isOpened.return_value = True
         mock_video_capture.return_value.read.return_value = (True, MagicMock())
-        
+
         # จำลองการทำงานของ cv2.imshow
         with patch("cv2.imshow") as mock_imshow:
             # จำลองการทำงานของ cv2.waitKey
             with patch("cv2.waitKey") as mock_wait_key:
                 # จำลองการกดปุ่ม 'q' เพื่อออก
                 mock_wait_key.return_value = ord('q')
-                
+
                 # เรียกใช้ฟังก์ชัน list_cameras
                 cameras = list_cameras()
-                
+
                 # ตรวจสอบว่ามีกล้อง
                 assert len(cameras) > 0
-                
+
                 # เรียกใช้ฟังก์ชัน show_camera
                 show_camera(webcam_config["default_camera"])
-                
+
                 # ตรวจสอบว่ามีการเรียกใช้ cv2.imshow
                 mock_imshow.assert_called()
 
@@ -323,25 +323,25 @@ def test_autogen_integration(autogen_config):
         mock_create.return_value = MagicMock(
             choices=[MagicMock(message=MagicMock(content="def test_function(): pass"))]
         )
-        
+
         # สร้าง agents
         code_agent = CodeAgent(api_key="test-api-key")
         research_agent = ResearchAgent(api_key="test-api-key")
-        
+
         # เรียกใช้ฟังก์ชัน write_code
         code = code_agent.write_code("เขียนฟังก์ชัน Python สำหรับทดสอบ")
-        
+
         # ตรวจสอบผลลัพธ์
         assert "def test_function(): pass" in code
-        
+
         # จำลองการตอบกลับจาก OpenAI สำหรับ research
         mock_create.return_value = MagicMock(
             choices=[MagicMock(message=MagicMock(content="ผลการวิจัย: Python เป็นภาษาที่ดี"))]
         )
-        
+
         # เรียกใช้ฟังก์ชัน research
         result = research_agent.research("ประโยชน์ของ Python")
-        
+
         # ตรวจสอบผลลัพธ์
         assert "Python เป็นภาษาที่ดี" in result
 ```
@@ -361,7 +361,7 @@ def test_config_performance():
     start_time = time.time()
     config = get_config()
     end_time = time.time()
-    
+
     # ตรวจสอบว่าใช้เวลาไม่เกิน 0.1 วินาที
     assert end_time - start_time < 0.1
 ```

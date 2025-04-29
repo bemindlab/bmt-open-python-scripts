@@ -5,7 +5,7 @@ BMT Open Python Scripts
 Python script collection for various tasks
 """
 
-from importlib.metadata import version, PackageNotFoundError
+from importlib.metadata import PackageNotFoundError, version
 
 try:
     __version__ = version("bmt-scripts")

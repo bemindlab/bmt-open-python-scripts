@@ -324,9 +324,9 @@ for row in csv_data:
         # แปลงค่า integer
         elif value.isdigit():
             value = int(value)
-        
+
         item[headers[i]] = value
-    
+
     json_data.append(item)
 
 # บันทึกข้อมูลที่แปลงแล้วลงในไฟล์ JSON
@@ -363,7 +363,7 @@ if validate_config():
     # ใช้งานการตั้งค่า
     model = AUTOGEN_CONFIG["model"]
     temperature = AUTOGEN_CONFIG["temperature"]
-    
+
     # สร้าง agent ด้วยการตั้งค่าที่กำหนด
     agent = AutoGenAgent(
         name="my_agent",
@@ -574,9 +574,9 @@ for row in csv_data:
         # แปลงค่า integer
         elif value.isdigit():
             value = int(value)
-        
+
         item[headers[i]] = value
-    
+
     json_data.append(item)
 
 # บันทึกข้อมูลที่แปลงแล้วลงในไฟล์ JSON

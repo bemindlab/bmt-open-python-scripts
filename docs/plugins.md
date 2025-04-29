@@ -107,12 +107,12 @@ console = Console()
 
 def register(plugin_manager):
     """ลงทะเบียน plugin สำหรับการจัดการไฟล์"""
-    
+
     @plugin_manager.main.group()
     def files():
         """คำสั่งสำหรับการจัดการไฟล์"""
         pass
-    
+
     @files.command()
     @click.argument('path')
     def list(path):
@@ -122,7 +122,7 @@ def register(plugin_manager):
             if not path_obj.exists():
                 console.print(f"[red]ไม่พบโฟลเดอร์: {path}[/red]")
                 return
-                
+
             console.print(f"[bold green]รายการไฟล์ใน {path}:[/bold green]")
             for item in path_obj.iterdir():
                 if item.is_file():
@@ -131,7 +131,7 @@ def register(plugin_manager):
                     console.print(f"  📁 {item.name}")
         except Exception as e:
             console.print(f"[red]เกิดข้อผิดพลาด: {str(e)}[/red]")
-    
+
     @files.command()
     @click.argument('source')
     @click.argument('destination')
@@ -157,12 +157,12 @@ console = Console()
 
 def register(plugin_manager):
     """ลงทะเบียน plugin สำหรับการจัดการฐานข้อมูล"""
-    
+
     @plugin_manager.main.group()
     def db():
         """คำสั่งสำหรับการจัดการฐานข้อมูล"""
         pass
-    
+
     @db.command()
     @click.argument('db_path')
     def init(db_path):
@@ -170,7 +170,7 @@ def register(plugin_manager):
         try:
             conn = sqlite3.connect(db_path)
             cursor = conn.cursor()
-            
+
             # สร้างตารางตัวอย่าง
             cursor.execute('''
             CREATE TABLE IF NOT EXISTS users (
@@ -179,14 +179,14 @@ def register(plugin_manager):
                 email TEXT UNIQUE NOT NULL
             )
             ''')
-            
+
             conn.commit()
             conn.close()
-            
+
             console.print(f"[green]สร้างฐานข้อมูล {db_path} สำเร็จ[/green]")
         except Exception as e:
             console.print(f"[red]เกิดข้อผิดพลาด: {str(e)}[/red]")
-    
+
     @db.command()
     @click.argument('db_path')
     @click.argument('query')
@@ -195,14 +195,14 @@ def register(plugin_manager):
         try:
             conn = sqlite3.connect(db_path)
             cursor = conn.cursor()
-            
+
             result = cursor.execute(query).fetchall()
-            
+
             # แสดงผลลัพธ์
             console.print(f"[bold green]ผลลัพธ์:[/bold green]")
             for row in result:
                 console.print(f"  {row}")
-                
+
             conn.close()
         except Exception as e:
             console.print(f"[red]เกิดข้อผิดพลาด: {str(e)}[/red]")
@@ -231,7 +231,7 @@ def test_plugin_registration():
     with patch("bmt_scripts.plugins.your_plugin.register") as mock_register:
         # สร้าง PluginManager
         plugin_manager = PluginManager()
-        
+
         # ตรวจสอบว่ามีการเรียกใช้ฟังก์ชัน register
         mock_register.assert_called_once_with(plugin_manager)
 
@@ -241,7 +241,7 @@ def test_plugin_command():
     with patch("click.Context.invoke") as mock_invoke:
         # จำลองการรันคำสั่ง
         mock_invoke.return_value = None
-        
+
         # ตรวจสอบผลลัพธ์
         assert mock_invoke.call_count == 1
 ```
@@ -281,4 +281,4 @@ plugin_manager = PluginManager()
 plugin_manager.reload_plugins()
 ```
 
-หรือรีสตาร์ทแอปพลิเคชัน 
+หรือรีสตาร์ทแอปพลิเคชัน

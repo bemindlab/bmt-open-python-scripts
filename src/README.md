@@ -9,7 +9,7 @@ src/
 ├── __init__.py             # Root package marker
 ├── bmt_libs/               # Library modules (internal use)
 │   ├── __init__.py
-│   ├── agents/             # Agent implementations 
+│   ├── agents/             # Agent implementations
 │   │   └── autogen/        # Microsoft AutoGen libraries
 │   └── hardware/           # Hardware access libraries
 │       ├── camera.py
@@ -42,7 +42,7 @@ src/
   ```python
   # From a script importing a library
   from bmt_libs.agents.autogen.core import CodeAgent
-  
+
   # From a library importing another library
   from bmt_libs.hardware.camera import Camera
   ```
